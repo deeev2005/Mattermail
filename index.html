@@ -1,558 +1,1499 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mattermail — Minimalist Workspace Interface for Clio</title>
-    <style>
-        :root {
-            --bg-canvas: #F9FAFB;
-            --bg-card: #FFFFFF;
-            --stroke-fine: #E5E7EB;
-            --stroke-dark: #111827;
-            --text-main: #111827;
-            --text-muted: #4B5563;
-            --brand-navy: #002F6C;
-            --brand-accent: #FF6B35;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mattermail — Gmail × Clio, Right From Your Inbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  :root {
+    --cream: #F7F4EF;
+    --cream-dark: #EDE9E0;
+    --navy: #0D2137;
+    --navy-mid: #1A3554;
+    --gold: #A07820;
+    --gold-light: #C4992A;
+    --slate: #4A5568;
+    --slate-light: #718096;
+    --border: #D6CFBF;
+    --white: #FFFFFF;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-canvas);
-            color: var(--text-main);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-        }
+  html { scroll-behavior: smooth; }
 
-        /* Typography Override for YC/Abel Editorial Look */
-        h1, h2, h3, .serif-font {
-            font-family: "Georgia", Garamond, serif;
-            font-weight: 400;
-            color: var(--text-main);
-        }
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--navy);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
 
-        /* Navigation Grid */
-        header {
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--stroke-fine);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(247, 244, 239, 0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-        .nav-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--navy);
+  }
 
-        .logo-mark {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            font-size: 1.15rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            color: var(--text-main);
-        }
+  .nav-logo {
+    width: 32px;
+    height: 32px;
+    background: var(--navy);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-        .logo-mark img {
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
-        }
+  .nav-logo svg { width: 18px; height: 18px; fill: var(--cream); }
 
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
+  .nav-wordmark {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            transition: color 0.15s ease;
-        }
+  .nav-right { display: flex; align-items: center; gap: 28px; }
 
-        .nav-links a:hover {
-            color: var(--text-main);
-        }
+  .nav-link {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--slate);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--navy); }
 
-        .btn-black-sm {
-            background: var(--stroke-dark);
-            color: #FFFFFF !important;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
+  .btn-nav {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white);
+    background: var(--navy);
+    border: none;
+    padding: 9px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: background 0.2s;
+  }
+  .btn-nav:hover { background: var(--navy-mid); }
 
-        /* Hero Section */
-        .hero-section {
-            padding: 100px 24px 80px 24px;
-            text-align: center;
-            border-bottom: 1px solid var(--stroke-fine);
-            background-color: #FFFFFF;
-        }
+  /* ── HERO ── */
+  .hero {
+    padding: 160px 48px 100px;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
 
-        .hero-container {
-            max-width: 880px;
-            margin: 0 auto;
-        }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 22px;
+    padding: 6px 12px;
+    border: 1px solid #C4992A40;
+    border-radius: 3px;
+    background: #C4992A10;
+  }
 
-        .hero-tagline {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-            font-weight: 600;
-        }
+  .hero-eyebrow::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
 
-        h1 {
-            font-size: 3.25rem;
-            line-height: 1.15;
-            letter-spacing: -0.02em;
-            margin-bottom: 28px;
-        }
+  h1 {
+    font-family: var(--serif);
+    font-size: 58px;
+    font-weight: 600;
+    line-height: 1.08;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+  }
 
-        .hero-desc {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto 40px auto;
-            font-weight: 400;
-        }
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
 
-        .hero-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-        }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--slate);
+    line-height: 1.65;
+    margin-bottom: 40px;
+    font-weight: 300;
+    max-width: 460px;
+  }
 
-        .btn-primary-lg {
-            background-color: var(--stroke-dark);
-            color: #FFFFFF;
-            text-decoration: none;
-            padding: 14px 36px;
-            border-radius: 4px;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: opacity 0.15s ease;
-        }
+  .hero-actions { display: flex; align-items: center; gap: 20px; }
 
-        .btn-primary-lg:hover {
-            opacity: 0.9;
-        }
+  .btn-primary {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    background: var(--navy);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.01em;
+  }
+  .btn-primary:hover { background: var(--navy-mid); transform: translateY(-1px); }
 
-        .meta-specs {
-            font-family: monospace;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
+  .btn-ghost {
+    font-size: 14px;
+    color: var(--slate);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--navy); }
+  .btn-ghost svg { width: 14px; height: 14px; }
 
-        /* Core Features Grid */
-        .section-padding {
-            padding: 90px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+  .hero-trust {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
 
-        .section-title-wrapper {
-            margin-bottom: 64px;
-            border-left: 3px solid var(--stroke-dark);
-            padding-left: 20px;
-        }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--slate-light);
+  }
 
-        .section-title-wrapper h2 {
-            font-size: 2.25rem;
-            margin-bottom: 8px;
-        }
+  .trust-item svg { width: 14px; height: 14px; color: var(--gold); }
 
-        .section-title-wrapper p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-        }
+  /* ── GMAIL MOCKUP ── */
+  .gmail-mockup {
+    background: var(--white);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 40px rgba(13, 33, 55, 0.10);
+    overflow: hidden;
+  }
 
-        .feature-matrix {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1px;
-            background-color: var(--stroke-fine);
-            border: 1px solid var(--stroke-fine);
-        }
+  .mockup-topbar {
+    background: #F2F6FC;
+    border-bottom: 1px solid #E0E5EF;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-        .feature-cell {
-            background-color: var(--bg-card);
-            padding: 48px;
-            transition: background-color 0.2s ease;
-        }
+  .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .mockup-dot.r { background: #FF5F57; }
+  .mockup-dot.y { background: #FFBD2E; }
+  .mockup-dot.g { background: #28CA41; }
 
-        .feature-cell:hover {
-            background-color: #FAFAFA;
-        }
+  .mockup-urlbar {
+    flex: 1;
+    height: 22px;
+    background: var(--white);
+    border-radius: 4px;
+    border: 1px solid #D4D9E5;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 10px;
+    color: #888;
+    font-family: var(--sans);
+  }
 
-        .feature-num {
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-            display: block;
-        }
+  .mockup-body {
+    display: grid;
+    grid-template-columns: 2fr 1.1fr;
+    min-height: 340px;
+  }
 
-        .feature-cell h3 {
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-            letter-spacing: -0.01em;
-        }
+  .email-pane {
+    padding: 20px;
+    border-right: 1px solid #EAEDF2;
+  }
 
-        .feature-cell p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
+  .email-header {
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #EAEDF2;
+  }
 
-        /* Task Module Deep Dive Showcase */
-        .deep-dive-section {
-            background-color: #FFFFFF;
-            border-top: 1px solid var(--stroke-fine);
-            border-bottom: 1px solid var(--stroke-fine);
-            padding: 100px 24px;
-        }
+  .email-from {
+    font-size: 11px;
+    font-weight: 500;
+    color: #1a1a2e;
+    margin-bottom: 3px;
+    font-family: var(--sans);
+  }
 
-        .deep-dive-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 64px;
-            align-items: start;
-        }
+  .email-subject {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #1a1a2e;
+    margin-bottom: 3px;
+    font-family: var(--serif);
+  }
 
-        .spec-list {
-            list-style: none;
-            margin-top: 32px;
-        }
+  .email-date { font-size: 10px; color: #888; font-family: var(--sans); }
 
-        .spec-item {
-            border-top: 1px solid var(--stroke-fine);
-            padding: 16px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+  .email-body {
+    font-size: 10.5px;
+    color: #555;
+    line-height: 1.6;
+    font-family: var(--sans);
+  }
 
-        .spec-item strong {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
+  .addon-pane {
+    background: #FAFBFE;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-        .spec-item span {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
+  .addon-title {
+    font-family: var(--serif);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 2px;
+    border-bottom: 1px solid #E0E5EF;
+    padding-bottom: 8px;
+  }
 
-        /* Mock UI Component representing the code logic exactly */
-        .mock-ui-container {
-            background-color: var(--bg-canvas);
-            border: 1px solid var(--stroke-fine);
-            border-radius: 6px;
-            padding: 24px;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        }
+  .addon-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 3px;
+    font-family: var(--sans);
+  }
 
-        .mock-ui-header {
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--stroke-fine);
-            padding-bottom: 8px;
-        }
+  .addon-select {
+    width: 100%;
+    height: 26px;
+    background: var(--white);
+    border: 1px solid #D4D9E5;
+    border-radius: 4px;
+    font-size: 10px;
+    color: #333;
+    padding: 0 8px;
+    font-family: var(--sans);
+  }
 
-        .mock-field {
-            background: #FFFFFF;
-            border: 1px solid var(--stroke-fine);
-            padding: 10px 14px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            margin-bottom: 12px;
-            color: var(--text-muted);
-        }
-        
-        .mock-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            display: block;
-            color: var(--text-main);
-        }
+  .addon-btn {
+    width: 100%;
+    padding: 7px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--sans);
+    letter-spacing: 0.04em;
+    margin-top: 4px;
+  }
 
-        /* Performance Infrastructure Section */
-        .infra-section {
-            padding: 90px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
+  .addon-radio {
+    display: flex;
+    gap: 8px;
+    margin: 2px 0;
+  }
 
-        .infra-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-top: 48px;
-        }
+  .radio-opt {
+    font-size: 9.5px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--sans);
+  }
 
-        .infra-card {
-            border: 1px solid var(--stroke-fine);
-            padding: 24px;
-            border-radius: 4px;
-            background: var(--bg-card);
-            text-align: left;
-            font-family: monospace;
-        }
+  .radio-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid #999;
+    background: var(--white);
+    position: relative;
+  }
+  .radio-dot.active { border-color: var(--navy); }
+  .radio-dot.active::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--navy);
+  }
 
-        .infra-card h4 {
-            font-size: 0.95rem;
-            color: var(--text-main);
-            margin-bottom: 8px;
-        }
+  .addon-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #EBF2FF;
+    color: #1A3554;
+    font-size: 9px;
+    padding: 3px 7px;
+    border-radius: 3px;
+    font-weight: 500;
+    font-family: var(--sans);
+  }
 
-        .infra-card p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
+  /* ── DIVIDER ── */
+  .section-divider {
+    max-width: 1100px;
+    margin: 0 auto;
+    border: none;
+    border-top: 1px solid var(--border);
+  }
 
-        /* Footer Footer */
-        footer {
-            border-top: 1px solid var(--stroke-fine);
-            background-color: #FFFFFF;
-            padding: 60px 24px;
-        }
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    background: var(--navy);
+    padding: 44px 48px;
+  }
 
-        .footer-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
+  .stats-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
 
-        .footer-links-group {
-            display: flex;
-            gap: 24px;
-        }
+  .stat-item {
+    text-align: center;
+    padding: 0 24px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .stat-item:last-child { border-right: none; }
 
-        .footer-links-group a {
-            color: var(--text-muted);
-            text-decoration: none;
-        }
+  .stat-number {
+    font-family: var(--serif);
+    font-size: 42px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
 
-        .footer-links-group a:hover {
-            color: var(--text-main);
-        }
+  .stat-number span { color: var(--gold-light); }
 
-        @media (max-width: 768px) {
-            h1 { font-size: 2.25rem; }
-            .deep-dive-grid { grid-template-columns: 1fr; gap: 40px; }
-            .infra-grid { grid-template-columns: 1fr; }
-            .footer-inner { flex-direction: column; gap: 24px; text-align: center; }
-        }
-    </style>
+  .stat-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 96px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--navy);
+    margin-bottom: 18px;
+  }
+
+  .section-intro {
+    font-size: 16.5px;
+    color: var(--slate);
+    max-width: 580px;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 56px;
+  }
+
+  /* ── FEATURES GRID ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .feature-card {
+    background: var(--white);
+    padding: 32px 28px;
+    transition: background 0.2s;
+  }
+  .feature-card:hover { background: #FEFCF8; }
+
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--navy);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .feature-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: var(--cream);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .feature-icon.gold { background: var(--gold); }
+
+  h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  .feature-desc {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .feature-tags {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-size: 10.5px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    background: var(--cream-dark);
+    color: var(--slate);
+    font-weight: 400;
+    border: 1px solid var(--border);
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-wrap { background: var(--navy); padding: 96px 48px; }
+
+  .how-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .how-inner .section-label { color: var(--gold-light); }
+  .how-inner h2 { color: var(--white); margin-bottom: 60px; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+
+  .step { position: relative; }
+
+  .step-num {
+    font-family: var(--serif);
+    font-size: 56px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+    margin-bottom: -10px;
+    display: block;
+  }
+
+  .step-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .step-bar {
+    width: 36px;
+    height: 2px;
+    background: var(--gold-light);
+    margin-bottom: 16px;
+    margin-top: 4px;
+  }
+
+  /* ── DEEP FEATURES ── */
+  .deep-feature {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    padding: 72px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .deep-feature.reverse { direction: rtl; }
+  .deep-feature.reverse > * { direction: ltr; }
+
+  .deep-feature-text .section-label { margin-bottom: 14px; }
+
+  .deep-feature-text h2 {
+    font-size: 34px;
+    margin-bottom: 16px;
+  }
+
+  .deep-feature-text p {
+    font-size: 15px;
+    color: var(--slate);
+    line-height: 1.75;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+  .check-list li {
+    font-size: 14px;
+    color: var(--slate);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .check-list li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    background: var(--gold);
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: 11px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* ── VISUAL PANELS ── */
+  .panel {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    background: var(--navy);
+    padding: 14px 18px;
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-header svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: var(--gold-light);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .panel-body { padding: 20px; }
+
+  .mini-field {
+    margin-bottom: 14px;
+  }
+
+  .mini-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 5px;
+    font-family: var(--sans);
+  }
+
+  .mini-input {
+    width: 100%;
+    height: 30px;
+    background: #F7F6F3;
+    border: 1px solid #E0DACE;
+    border-radius: 4px;
+    font-size: 11.5px;
+    color: #333;
+    padding: 0 10px;
+    font-family: var(--sans);
+    display: flex;
+    align-items: center;
+  }
+
+  .mini-input.filled { background: #EBF2FF; border-color: #BFD3F5; color: var(--navy); font-weight: 500; }
+
+  .mini-row { display: flex; gap: 8px; }
+  .mini-row .mini-field { flex: 1; }
+
+  .priority-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 10.5px;
+    font-weight: 500;
+    font-family: var(--sans);
+  }
+  .priority-badge.high { background: #FEE2E2; color: #B91C1C; }
+  .priority-badge.normal { background: #E0F2FE; color: #0369A1; }
+  .priority-badge::before { content: '●'; font-size: 8px; }
+
+  .assign-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #F0EDE5;
+    font-family: var(--sans);
+  }
+
+  .assign-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .assign-name { font-size: 11px; color: var(--navy); font-weight: 500; }
+  .assign-role { font-size: 10px; color: #888; }
+
+  /* ── TASKS SECTION ── */
+  .templates-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .template-card {
+    background: #F7F6F3;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    font-family: var(--sans);
+  }
+  .template-card:hover { border-color: var(--navy); background: #EBF2FF20; }
+
+  .template-card.active { border-color: var(--navy); background: #EBF2FF; }
+
+  .tmpl-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--navy);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .tmpl-icon svg {
+    width: 14px; height: 14px;
+    fill: none; stroke: var(--cream);
+    stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .tmpl-name { font-size: 11.5px; font-weight: 500; color: var(--navy); }
+  .tmpl-desc { font-size: 10.5px; color: #888; margin-top: 2px; }
+
+  /* ── TIME ENTRY PANEL ── */
+  .time-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--sans);
+    margin-bottom: 12px;
+  }
+  .time-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold-light); }
+
+  /* ── TRUST / EARLY ACCESS SECTION ── */
+  .trust-section {
+    background: var(--cream-dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 48px;
+  }
+
+  .trust-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .trust-inner h2 { font-size: 34px; margin-bottom: 16px; }
+
+  .trust-inner p {
+    font-size: 15px;
+    color: var(--slate);
+    line-height: 1.75;
+    font-weight: 300;
+    margin-bottom: 14px;
+  }
+
+  .security-items { display: flex; flex-direction: column; gap: 16px; }
+
+  .security-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+    background: var(--white);
+    border-radius: 7px;
+    border: 1px solid var(--border);
+  }
+
+  .sec-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 7px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sec-icon svg {
+    width: 18px; height: 18px;
+    fill: none; stroke: var(--gold-light);
+    stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .sec-title { font-size: 13.5px; font-weight: 500; color: var(--navy); margin-bottom: 3px; font-family: var(--sans); }
+  .sec-desc { font-size: 12.5px; color: var(--slate); line-height: 1.5; font-weight: 300; font-family: var(--sans); }
+
+  /* ── CTA ── */
+  .cta-section { padding: 96px 48px; text-align: center; }
+
+  .cta-inner { max-width: 680px; margin: 0 auto; }
+
+  .cta-inner .section-label { display: block; margin-bottom: 16px; }
+
+  .cta-inner h2 { font-size: 44px; margin-bottom: 20px; }
+
+  .cta-inner p {
+    font-size: 16px;
+    color: var(--slate);
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  .cta-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .cta-note {
+    font-size: 12px;
+    color: var(--slate-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .cta-note span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 48px;
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+  }
+
+  .footer-brand {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .footer-links { display: flex; gap: 24px; }
+
+  .footer-link {
+    font-size: 12.5px;
+    color: var(--slate-light);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--navy); }
+
+  .footer-legal {
+    font-size: 12px;
+    color: var(--slate-light);
+  }
+
+  /* ── SEPARATOR FULL ── */
+  .full-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    border: none;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in { animation: fadeInUp 0.65s ease both; }
+  .fade-in-1 { animation-delay: 0.1s; }
+  .fade-in-2 { animation-delay: 0.22s; }
+  .fade-in-3 { animation-delay: 0.34s; }
+  .fade-in-4 { animation-delay: 0.46s; }
+  .fade-in-5 { animation-delay: 0.58s; }
+</style>
 </head>
 <body>
 
-    <!-- Minimalism Header -->
-    <header>
-        <div class="nav-inner">
-            <a href="#" class="logo-mark">
-                <img src="https://raw.githubusercontent.com/deeev2005/Gmail-to-Clio/main/logo2.png" alt="Mattermail">
-                <span>Mattermail</span>
-            </a>
-            <nav class="nav-links">
-                <a href="privacy.html">Privacy</a>
-                <a href="terms.html">Terms</a>
-                <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank" class="btn-black-sm">Beta Access</a>
-            </nav>
-        </div>
-    </header>
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+        <polyline points="22,6 12,13 2,6" stroke="#F7F4EF" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="nav-wordmark">Mattermail</span>
+  </a>
+  <div class="nav-right">
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#how-it-works" class="nav-link">How It Works</a>
+    <a href="#tasks" class="nav-link">Tasks & Time</a>
+    <a href="https://workspace.google.com/marketplace" class="btn-nav">Install Free →</a>
+  </div>
+</nav>
 
-    <!-- Editorial Hero -->
-    <section class="hero-section">
-        <div class="hero-container">
-            <p class="hero-tagline">Clio API Infrastructure Integration</p>
-            <h1>A zero-latency inbox workspace interface for modern law firms.</h1>
-            <p class="hero-desc">Mattermail binds transactional email communication records, real-time activity metrics, and granular multi-tier task matrices directly inside Gmail. No structural context switching required.</p>
-            <div class="hero-actions">
-                <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank" class="btn-primary-lg">Deploy Open Beta Extension</a>
-                <div class="meta-specs">v1.2.0 Engine // Memory Cache Stratified // Clio V4 Protocol Authorized</div>
-            </div>
-        </div>
-    </section>
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow fade-in fade-in-1">Gmail Add-on for Legal Professionals</div>
+    <h1 class="fade-in fade-in-2">File Emails to Clio,<br><em>Without Leaving</em><br>Your Inbox.</h1>
+    <p class="hero-sub fade-in fade-in-3">Mattermail connects Gmail with Clio Manage — so you can log emails to matters, create tasks, and track time without ever switching tabs.</p>
+    <div class="hero-actions fade-in fade-in-4">
+      <a href="https://workspace.google.com/marketplace" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Add to Gmail — Free
+      </a>
+      <a href="#how-it-works" class="btn-ghost">
+        See how it works
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+    <div class="hero-trust fade-in fade-in-5">
+      <div class="trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Clio Certified Integration
+      </div>
+      <div class="trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        No credentials stored
+      </div>
+      <div class="trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Free in early access
+      </div>
+    </div>
+  </div>
 
-    <!-- Complete Extension Engine Features Blueprint -->
-    <section class="section-padding">
-        <div class="section-title-wrapper">
-            <h2>System Capabilities Architecture</h2>
-            <p>Every operational module runs locally on Google’s V8 engine layer, communicating asynchronously with Clio endpoints[cite: 1, 3].</p>
+  <!-- MOCKUP -->
+  <div class="gmail-mockup fade-in fade-in-3">
+    <div class="mockup-topbar">
+      <div class="mockup-dot r"></div>
+      <div class="mockup-dot y"></div>
+      <div class="mockup-dot g"></div>
+      <div class="mockup-urlbar">mail.google.com</div>
+    </div>
+    <div class="mockup-body">
+      <div class="email-pane">
+        <div class="email-header">
+          <div class="email-from">📬 James Harrington &lt;j.harrington@millslaw.com&gt;</div>
+          <div class="email-subject">Settlement Agreement — Proposed Terms</div>
+          <div class="email-date">Today, 10:22 AM · 2 attachments</div>
+        </div>
+        <div class="email-body">
+          Dear Counsel,<br><br>
+          Please find attached our client's proposed settlement terms for the above-captioned matter. We request a response by end of week.<br><br>
+          We have also included the revised exhibit schedule for your review. Please confirm receipt at your earliest convenience.<br><br>
+          Regards,<br>James R. Harrington
+        </div>
+      </div>
+      <div class="addon-pane">
+        <div class="addon-title">⚖ Mattermail</div>
+
+        <div class="addon-label">Save Mode</div>
+        <div class="addon-radio">
+          <div class="radio-opt"><div class="radio-dot active"></div> As Thread</div>
+          <div class="radio-opt"><div class="radio-dot"></div> Individual</div>
         </div>
 
-        <div class="feature-matrix">
-            <!-- Feature Cell 1 -->
-            <div class="feature-cell">
-                <span class="feature-cell feature-num">[01]</span>
-                <h3>Correspondence Compilation</h3>
-                <p>Scans the complete active immutable email thread data layer[cite: 1, 3]. Provides explicit structural toggles to preserve sequential correspondence either as a unified, sanitized multi-message single thread document or cleanly isolated chronological file versions mapping to the target matter ledger[cite: 1, 3].</p>
-            </div>
-            <!-- Feature Cell 2 -->
-            <div class="feature-cell">
-                <span class="feature-cell feature-num">[02]</span>
-                <h3>Quantified Activity Logger</h3>
-                <p>A native time tracking component linked into your legal billing registry[cite: 1, 3]. Translates casual time annotations (e.g., shorthand tokens like "1h 12m" or structural timestamps like "1:12") directly into precise raw millisecond integers synchronized directly with Clio’s primary activity ledger[cite: 1].</p>
-            </div>
-            <!-- Feature Cell 3 -->
-            <div class="feature-cell">
-                <span class="feature-cell feature-num">[03]</span>
-                <h3>Dynamic Attachment Isolation</h3>
-                <p>Extracts incoming data assets and prevents missing pointer issues by running early structural dependency checks[cite: 1, 3]. Allows multi-file selections via a single global toggle and pipelines those document bytes directly into a matter-specific subfolder[cite: 1, 3].</p>
-            </div>
-            <!-- Feature Cell 4 -->
-            <div class="feature-cell">
-                <span class="feature-cell feature-num">[04]</span>
-                <h3>Identity Mapping Flow</h3>
-                <p>Runs lookup mechanisms directly inside the inbox to ensure contact records are linked correctly[cite: 1]. Automatically queries Clio’s central entity database by processing email properties to pull down matching structural parameters or creates new client identity cards without requiring manual entry[cite: 1].</p>
-            </div>
-        </div>
-    </section>
+        <div class="addon-label" style="margin-top:8px">Matter</div>
+        <select class="addon-select">
+          <option>M-2024-087 — Harrington v. Drake</option>
+          <option>M-2024-062 — Estate: Morris</option>
+        </select>
 
-    <!-- Exhaustive Task Module Deep Dive (User Requested) -->
-    <section class="deep-dive-section">
-        <div class="deep-dive-grid">
+        <button class="addon-btn">Save to Clio →</button>
+
+        <div style="border-top: 1px solid #E0E5EF; padding-top: 10px; margin-top: 4px;">
+          <div class="addon-label">Attachments (2)</div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:#333;font-family:var(--sans);">
+              <input type="checkbox" checked style="accent-color:var(--navy)"> settlement_terms.pdf
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:#333;font-family:var(--sans);">
+              <input type="checkbox" checked style="accent-color:var(--navy)"> exhibit_schedule.pdf
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:8px">
+          <div class="addon-chip">✓ Time Entry</div>
+          &nbsp;
+          <div class="addon-chip">+ Create Task</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">3<span>x</span></div>
+      <div class="stat-label">Faster Matter Filing</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">0</div>
+      <div class="stat-label">Tab Switching Required</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">200<span>+</span></div>
+      <div class="stat-label">Matters Supported</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">100<span>%</span></div>
+      <div class="stat-label">Free in Early Access</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES GRID -->
+<section class="section" id="features">
+  <div class="section-label">What Mattermail Does</div>
+  <h2>Every Tool Your Practice<br>Needs, Inside Gmail.</h2>
+  <p class="section-intro">Legal work lives in your inbox. Mattermail brings Clio's core capabilities directly into Gmail — so nothing falls through the cracks.</p>
+
+  <div class="features-grid">
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <h3>File Emails to Matters</h3>
+      <p class="feature-desc">Select any email or entire thread and save it directly to an open matter in Clio. Choose between threading all emails into a single communication or filing each message individually for granular record-keeping.</p>
+      <div class="feature-tags">
+        <span class="tag">Thread mode</span>
+        <span class="tag">Individual mode</span>
+        <span class="tag">200+ matters</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+      </div>
+      <h3>Attachment Management</h3>
+      <p class="feature-desc">All attachments across the thread are detected automatically. Use bulk select or deselect individual files to precisely control what gets uploaded to your matter in Clio — no manual downloading required.</p>
+      <div class="feature-tags">
+        <span class="tag">Auto-detect</span>
+        <span class="tag">Bulk select</span>
+        <span class="tag">PDF & DOCX</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon gold">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h3>Time Entry Logging</h3>
+      <p class="feature-desc">Log billable time without leaving the email. Enter duration in natural format (e.g. <em>1h 30m</em> or <em>1:30</em>), add a description, and set your hourly rate — all synced directly to Clio's time entries for the selected matter.</p>
+      <div class="feature-tags">
+        <span class="tag">Flexible duration input</span>
+        <span class="tag">Custom rate</span>
+        <span class="tag">Direct Clio sync</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <h3>Task Creation</h3>
+      <p class="feature-desc">Create Clio tasks directly from any email. Set the task name, description, priority level, assignee, due date, and time estimate — all without switching to Clio. Pre-built templates make common actions instant.</p>
+      <div class="feature-tags">
+        <span class="tag">Priority levels</span>
+        <span class="tag">Due date picker</span>
+        <span class="tag">Assignee dropdown</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <h3>Quick Task Templates</h3>
+      <p class="feature-desc">One-click templates auto-populate task fields for the most common legal follow-up actions. Stop typing the same task names for every client email.</p>
+      <div class="feature-tags">
+        <span class="tag">Call client</span>
+        <span class="tag">Save attachments</span>
+        <span class="tag">Review &amp; draft</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon gold">
+        <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+      </div>
+      <h3>Smart Matter Dropdown</h3>
+      <p class="feature-desc">All open matters are fetched from Clio and cached for instant loading. The add-on remembers your last selected matter to speed up repeat filings on the same case. One refresh syncs new matters immediately.</p>
+      <div class="feature-tags">
+        <span class="tag">Auto-cached</span>
+        <span class="tag">Remembers last matter</span>
+        <span class="tag">Force refresh</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="full-divider">
+
+<!-- HOW IT WORKS -->
+<section class="how-wrap" id="how-it-works">
+  <div class="how-inner">
+    <div class="section-label">Simple by Design</div>
+    <h2>Three Steps to a Filed Email.</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <div class="step-bar"></div>
+        <div class="step-title">Connect Clio Once</div>
+        <p class="step-desc">Authorize Mattermail to access your Clio account via secure OAuth. Your credentials are never stored — authentication is handled entirely by Clio's own authorization servers.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <div class="step-bar"></div>
+        <div class="step-title">Open Any Email Thread</div>
+        <p class="step-desc">Click Mattermail in the Gmail sidebar. Select which emails and attachments to file, pick your matter from the dropdown, and choose whether to save as a thread or individually.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <div class="step-bar"></div>
+        <div class="step-title">Log, Track & Move On</div>
+        <p class="step-desc">Hit Save to Clio. Optionally log time and create follow-up tasks in the same action. Every detail lands in Clio instantly — no copy-pasting, no tab switching, no delays.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TASK DEEP DIVE -->
+<section class="deep-feature" id="tasks">
+  <div class="deep-feature-text">
+    <div class="section-label">Task Management</div>
+    <h2>Create Tasks That Actually Get Done.</h2>
+    <p>Legal follow-ups get lost when they're not captured immediately. Mattermail lets you create a fully-detailed Clio task the moment you read an email — while the context is still fresh.</p>
+    <ul class="check-list">
+      <li>Task name auto-fills from the email subject line</li>
+      <li>Set priority: Normal, High, or Low — visible in Clio immediately</li>
+      <li>Assign to any user in your Clio account from a dropdown</li>
+      <li>Choose a task type from your firm's configured Clio categories</li>
+      <li>Set a due date and time estimate in hours</li>
+      <li>One-click templates: Call client, Save attachments, Review &amp; draft response</li>
+      <li>Task description auto-fills with sender name for context</li>
+    </ul>
+  </div>
+  <div>
+    <div class="panel">
+      <div class="panel-header">
+        <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Create Task
+      </div>
+      <div class="panel-body">
+        <div class="addon-label">Quick Template</div>
+        <div class="templates-grid" style="margin-bottom:16px">
+          <div class="template-card active">
+            <div class="tmpl-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/><path d="M2 6.94A19.92 19.92 0 0 1 8.72 2.06 2 2 0 0 1 10.9 4v3a2 2 0 0 1-.6 1.41l-1.41 1.41a16 16 0 0 0 6.29 6.29l1.41-1.41A2 2 0 0 1 18 14h3a2 2 0 0 1 2 2.18"/></svg>
+            </div>
+            <div class="tmpl-name">Call Client</div>
+            <div class="tmpl-desc">Regarding this email</div>
+          </div>
+          <div class="template-card">
+            <div class="tmpl-icon">
+              <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </div>
+            <div class="tmpl-name">Save Attachments</div>
+            <div class="tmpl-desc">To matter folder</div>
+          </div>
+          <div class="template-card">
+            <div class="tmpl-icon">
+              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </div>
+            <div class="tmpl-name">Review &amp; Draft</div>
+            <div class="tmpl-desc">Response required</div>
+          </div>
+          <div class="template-card">
+            <div class="tmpl-icon">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div class="tmpl-name">Custom Task</div>
+            <div class="tmpl-desc">Enter manually</div>
+          </div>
+        </div>
+
+        <div class="mini-field">
+          <div class="mini-label">Task Name</div>
+          <div class="mini-input filled">Follow up on: Settlement Agreement — Proposed Terms</div>
+        </div>
+
+        <div class="mini-row">
+          <div class="mini-field">
+            <div class="mini-label">Priority</div>
+            <div style="margin-top:5px"><span class="priority-badge high">High</span></div>
+          </div>
+          <div class="mini-field">
+            <div class="mini-label">Estimate</div>
+            <div class="mini-input">0.5 hrs</div>
+          </div>
+        </div>
+
+        <div class="mini-field" style="margin-top:12px">
+          <div class="mini-label">Assign To</div>
+          <div class="assign-row">
+            <div class="assign-avatar">SL</div>
             <div>
-                <div class="section-title-wrapper" style="margin-bottom: 32px;">
-                    <h2>The Task Lifecycle Engine</h2>
-                    <p>Instead of relying on generic textbox entry patterns, Mattermail features a task-generation matrix compiled using Clio's core enterprise parameters[cite: 3].</p>
-                </div>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">
-                    Every single task parameter parsed within the context pane is verified against your firm's cloud ecosystem data structures before dispatch[cite: 3]. This completely rules out assignment errors or unaligned processing queues[cite: 3].
-                </p>
-                
-                <ul class="spec-list">
-                    <li class="spec-item">
-                        <strong>Firm-Wide Associate Mapping</strong>
-                        <span>Queries and processes your operational firm roster directly from Clio[cite: 3]. Maps task items onto internal teammates instantly via cached select inputs right inside the inbox interface[cite: 3].</span>
-                    </li>
-                    <li class="spec-item">
-                        <strong>Dynamic Task Type Categorization</strong>
-                        <span>Queries and securely stores your preset procedural workflow types directly from Clio's database[cite: 3]. This allows you to tag tasks under compliance categories without having to retype classifications[cite: 3].</span>
-                    </li>
-                    <li class="spec-item">
-                        <strong>Automated Quick-Action Templates</strong>
-                        <span>Instantly populates common follow-up items like "Call client regarding this email" or "Review and draft response" with a single click, completely replacing manual text drafting workflows[cite: 3].</span>
-                    </li>
-                    <li class="spec-item">
-                        <strong>Precise Time and Date Allocation</strong>
-                        <span>Pairs a native system date picker with a numerical duration tracker to record estimated effort directly against project deadlines[cite: 3].</span>
-                    </li>
-                </ul>
+              <div class="assign-name">Sarah Lawton</div>
+              <div class="assign-role">Senior Associate</div>
             </div>
-
-            <!-- Visual Layout Mockup of the UI_2.gs File Layout -->
-            <div class="mock-ui-container">
-                <div class="mock-ui-header">
-                    <span>Mattermail Interface Component</span>
-                    <span>Task_Module[cite: 3]</span>
-                </div>
-                
-                <span class="mock-label">Quick Templates Selection[cite: 3]</span>
-                <div class="mock-field">↳ Review and draft response</div>
-
-                <span class="mock-label">Task Name[cite: 3]</span>
-                <div class="mock-field">Follow up on: Case Brief Review</div>
-
-                <span class="mock-label">Task Priority[cite: 3]</span>
-                <div class="mock-field">⚡ High Priority</div>
-
-                <span class="mock-label">Clio Task Type Registry (Cached)[cite: 3]</span>
-                <div class="mock-field">💼 Litigation Support / Compliance Filing</div>
-
-                <span class="mock-label">Assign To Firm Associate (Synchronized)[cite: 3]</span>
-                <div class="mock-field">👤 Lead Counsel Account Pointer</div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div>
-                        <span class="mock-label">Due Date[cite: 3]</span>
-                        <div class="mock-field">📅 2026-06-15</div>
-                    </div>
-                    <div>
-                        <span class="mock-label">Time Estimate[cite: 3]</span>
-                        <div class="mock-field">⏱️ 1.5 Hours</div>
-                    </div>
-                </div>
-                
-                <div style="background: var(--stroke-dark); color: white; text-align: center; padding: 10px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-top: 8px;">
-                    Execute and Commit to Clio
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Technical Infrastructure / Optimization Explanations -->
-    <section class="infra-section">
-        <div class="section-title-wrapper" style="text-align: left; max-width: 700px; margin: 0 auto 40px auto;">
-            <h2>Optimization Architecture</h2>
-            <p>Mattermail is intentionally built to minimize standard Google Workspace payload lag[cite: 3].</p>
-        </div>
-        
-        <div class="infra-grid">
-            <div class="infra-card">
-                <h4>6-Hour Throttled Sync[cite: 3]</h4>
-                <p>Throttles active DAU updates to Firestore to 6-hour cycles, completely avoiding unnecessary background data lookups[cite: 3].</p>
-            </div>
-            <div class="infra-card">
-                <h4>Payload Optimization[cite: 3]</h4>
-                <p>Queries specific target keys down the line rather than pulling down heavy data objects, preserving snappy rendering speeds[cite: 3].</p>
-            </div>
-            <div class="infra-card">
-                <h4>Automated Cache Flushing[cite: 3]</h4>
-                <p>Clears stored data allocations out of memory immediately on manual refresh triggers to guarantee live accuracy[cite: 3].</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer Area -->
-    <footer>
-        <div class="footer-inner">
+          </div>
+          <div class="assign-row" style="border-bottom:none">
+            <div class="assign-avatar" style="background:#4A5568">MK</div>
             <div>
-                <p>&copy; 2026 Mattermail Core Engine. Open-beta ecosystem license.</p>
-                <p style="font-size: 0.75rem; margin-top: 4px; color: var(--text-muted);">Independent platform unassociated with Google Inc. or Clio Software Corp.</p>
+              <div class="assign-name">Michael Kane</div>
+              <div class="assign-role">Partner</div>
             </div>
-            <div class="footer-links-group">
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms of Service</a>
-                <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank">Ecosystem Feedback</a>
-            </div>
+          </div>
         </div>
-    </footer>
 
+        <button class="addon-btn" style="margin-top:12px">Create Task in Clio →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="full-divider">
+
+<!-- TIME ENTRY DEEP DIVE -->
+<section class="deep-feature reverse">
+  <div class="deep-feature-text">
+    <div class="section-label">Time Tracking</div>
+    <h2>Log Billable Time the Moment It Happens.</h2>
+    <p>Reading and responding to client emails is billable work. Mattermail makes it effortless to log that time while you're still in the email — before the moment is lost.</p>
+    <ul class="check-list">
+      <li>Natural duration input: <em>1h 30m</em>, <em>1:30</em>, or decimal hours</li>
+      <li>Free-text description field for activity notes</li>
+      <li>Custom hourly rate per entry for accurate billing</li>
+      <li>Time entries are linked to the selected matter in Clio</li>
+      <li>Works alongside email filing — log time and save email in one action</li>
+    </ul>
+  </div>
+  <div>
+    <div class="panel">
+      <div class="panel-header">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Time Entry
+      </div>
+      <div class="panel-body">
+        <div class="time-pill">
+          <div class="time-pill-dot"></div>
+          Active: M-2024-087 — Harrington v. Drake
+        </div>
+        <div class="mini-field">
+          <div class="mini-label">Duration</div>
+          <div class="mini-input filled">1h 12m</div>
+        </div>
+        <div class="mini-field">
+          <div class="mini-label">Description</div>
+          <div class="mini-input filled" style="height:54px;align-items:flex-start;padding-top:8px;white-space:normal;font-size:11px;line-height:1.45">Reviewed settlement terms from opposing counsel. Assessed proposed exhibit schedule and flagged three contested items for partner review.</div>
+        </div>
+        <div class="mini-field">
+          <div class="mini-label">Rate (per hour)</div>
+          <div class="mini-input filled">$450.00</div>
+        </div>
+        <div style="margin-top:10px; padding:12px; background:var(--cream-dark); border-radius:6px; border:1px solid var(--border);">
+          <div style="display:flex; justify-content:space-between; font-size:12px; font-family:var(--sans);">
+            <span style="color:var(--slate)">Estimated bill</span>
+            <span style="font-weight:500; color:var(--navy)">$540.00</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:11px; font-family:var(--sans); margin-top:4px;">
+            <span style="color:var(--slate-light)">1.2 hrs × $450/hr</span>
+            <span style="color:var(--slate-light)">Syncs to Clio</span>
+          </div>
+        </div>
+        <button class="addon-btn" style="margin-top:14px">Log Time Entry →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST / SECURITY -->
+<div class="trust-section">
+  <div class="trust-inner">
+    <div>
+      <div class="section-label">Built for the Legal Profession</div>
+      <h2>Your Client Data Stays Where It Belongs.</h2>
+      <p>Law firms operate under strict confidentiality obligations. Mattermail is built from the ground up to respect those obligations — with security as a first principle, not an afterthought.</p>
+      <p>Currently free during early access. Your feedback directly shapes the product roadmap for our upcoming premium release.</p>
+      <div style="margin-top:24px">
+        <a href="https://forms.gle/GzeL86UKqW9WdJkR8" class="btn-primary" style="display:inline-flex">Share Feedback →</a>
+      </div>
+    </div>
+    <div class="security-items">
+      <div class="security-item">
+        <div class="sec-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <div class="sec-title">No Credential Storage</div>
+          <div class="sec-desc">Mattermail never stores your Clio or Google credentials. All authentication is handled by OAuth 2.0 with Clio's own authorization servers.</div>
+        </div>
+      </div>
+      <div class="security-item">
+        <div class="sec-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div class="sec-title">Google Verified Add-on</div>
+          <div class="sec-desc">Distributed through the Google Workspace Marketplace under Google's application security review standards for enterprise add-ons.</div>
+        </div>
+      </div>
+      <div class="security-item">
+        <div class="sec-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div>
+          <div class="sec-title">Smart Caching, Minimal API Calls</div>
+          <div class="sec-desc">Matter lists, task types, and user data are cached locally for up to an hour. Only necessary data is fetched — no bulk downloads of sensitive records.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <span class="section-label">Get Started Today</span>
+    <h2>Your Inbox Is Already<br>Your <em>Command Center.</em></h2>
+    <p>Join legal professionals who file emails, log time, and manage tasks without ever leaving Gmail. Free during early access — no credit card required.</p>
+    <div class="cta-actions">
+      <a href="https://workspace.google.com/marketplace" class="btn-primary">
+        Add Mattermail to Gmail — Free
+      </a>
+      <a href="https://forms.gle/GzeL86UKqW9WdJkR8" class="btn-ghost">
+        Report a Bug / Share Feedback
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </div>
+    <div class="cta-note">
+      <span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A07820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Free during early access
+      </span>
+      <span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A07820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        No credentials stored
+      </span>
+      <span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A07820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Requires Clio account
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Mattermail</div>
+  <div class="footer-links">
+    <a href="https://forms.gle/GzeL86UKqW9WdJkR8" class="footer-link">Feedback</a>
+    <a href="https://workspace.google.com/marketplace" class="footer-link">Google Workspace Marketplace</a>
+    <a href="https://clio.com" class="footer-link">Clio</a>
+  </div>
+  <div class="footer-legal">Gmail × Clio Integration · Early Access</div>
+</footer>
+
+<script>
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      var id = this.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Nav shadow on scroll
+  var nav = document.querySelector('nav');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 10) {
+      nav.style.boxShadow = '0 1px 20px rgba(13,33,55,0.07)';
+    } else {
+      nav.style.boxShadow = 'none';
+    }
+  });
+
+  // Template card toggle
+  document.querySelectorAll('.template-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.template-card').forEach(function(c) { c.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+</script>
 </body>
 </html>
