@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mattermail — Enterprise Gmail & Clio Integration for Legal Professionals</title>
+    <title>Mattermail — Minimalist Workspace Interface for Clio</title>
     <style>
         :root {
-            --primary: #002F6C;
-            --primary-light: #00459E;
-            --accent: #FF6B35;
-            --accent-hover: #E55B27;
-            --text-dark: #1A2530;
-            --text-muted: #5A6578;
-            --bg-light: #F8FAFC;
-            --border-color: #E2E8F0;
+            --bg-canvas: #F9FAFB;
+            --bg-card: #FFFFFF;
+            --stroke-fine: #E5E7EB;
+            --stroke-dark: #111827;
+            --text-main: #111827;
+            --text-muted: #4B5563;
+            --brand-navy: #002F6C;
+            --brand-accent: #FF6B35;
         }
 
         * {
@@ -23,376 +23,535 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: var(--text-dark);
-            background-color: #FFFFFF;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            line-height: 1.5;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Navigation */
-        header {
-            border-bottom: 1px solid var(--border-color);
-            background: #FFFFFF;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        /* Typography Override for YC/Abel Editorial Look */
+        h1, h2, h3, .serif-font {
+            font-family: "Georgia", Garamond, serif;
+            font-weight: 400;
+            color: var(--text-main);
         }
 
-        .nav-container {
-            max-width: 1100px;
+        /* Navigation Grid */
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--stroke-fine);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 16px 24px;
+            padding: 20px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .brand {
+        .logo-mark {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             text-decoration: none;
-        }
-
-        .brand img {
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            object-fit: cover;
-        }
-
-        .brand-name {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 700;
-            color: var(--primary);
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+        }
+
+        .logo-mark img {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
         }
 
         .nav-links {
             display: flex;
-            gap: 24px;
+            gap: 32px;
             align-items: center;
         }
 
         .nav-links a {
             text-decoration: none;
             color: var(--text-muted);
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: color 0.2s ease;
+            font-size: 0.9rem;
+            transition: color 0.15s ease;
         }
 
         .nav-links a:hover {
-            color: var(--primary);
+            color: var(--text-main);
         }
 
-        .btn-cta-sm {
-            background-color: var(--primary);
+        .btn-black-sm {
+            background: var(--stroke-dark);
             color: #FFFFFF !important;
             padding: 8px 16px;
             border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-        }
-
-        .btn-cta-sm:hover {
-            background-color: var(--primary-light);
+            font-size: 0.85rem;
+            font-weight: 500;
         }
 
         /* Hero Section */
-        .hero {
-            padding: 80px 24px;
+        .hero-section {
+            padding: 100px 24px 80px 24px;
             text-align: center;
-            background: linear-gradient(180deg, rgba(248,250,252,1) 0%, rgba(255,255,255,1) 100%);
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--stroke-fine);
+            background-color: #FFFFFF;
         }
 
         .hero-container {
-            max-width: 850px;
+            max-width: 880px;
             margin: 0 auto;
         }
 
-        .badge {
-            display: inline-block;
-            background-color: rgba(0, 47, 108, 0.06);
-            color: var(--primary);
-            padding: 6px 14px;
-            border-radius: 100px;
+        .hero-tagline {
             font-size: 0.85rem;
-            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
             margin-bottom: 24px;
+            font-weight: 600;
         }
 
         h1 {
-            font-size: 2.75rem;
-            font-weight: 800;
-            line-height: 1.2;
-            color: var(--primary);
-            letter-spacing: -0.03em;
-            margin-bottom: 20px;
+            font-size: 3.25rem;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 28px;
         }
 
-        .hero p {
-            font-size: 1.2rem;
+        .hero-desc {
+            font-size: 1.25rem;
             color: var(--text-muted);
-            max-width: 650px;
-            margin: 0 auto 36px auto;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            font-weight: 400;
         }
 
-        .cta-group {
+        .hero-actions {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
 
-        .btn-main {
-            background-color: var(--accent);
+        .btn-primary-lg {
+            background-color: var(--stroke-dark);
             color: #FFFFFF;
             text-decoration: none;
-            padding: 14px 32px;
+            padding: 14px 36px;
             border-radius: 4px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: opacity 0.15s ease;
+        }
+
+        .btn-primary-lg:hover {
+            opacity: 0.9;
+        }
+
+        .meta-specs {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Core Features Grid */
+        .section-padding {
+            padding: 90px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title-wrapper {
+            margin-bottom: 64px;
+            border-left: 3px solid var(--stroke-dark);
+            padding-left: 20px;
+        }
+
+        .section-title-wrapper h2 {
+            font-size: 2.25rem;
+            margin-bottom: 8px;
+        }
+
+        .section-title-wrapper p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .feature-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1px;
+            background-color: var(--stroke-fine);
+            border: 1px solid var(--stroke-fine);
+        }
+
+        .feature-cell {
+            background-color: var(--bg-card);
+            padding: 48px;
             transition: background-color 0.2s ease;
         }
 
-        .btn-main:hover {
-            background-color: var(--accent-hover);
+        .feature-cell:hover {
+            background-color: #FAFAFA;
         }
 
-        .security-notice {
+        .feature-num {
+            font-family: monospace;
             font-size: 0.85rem;
             color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            margin-bottom: 24px;
+            display: block;
         }
 
-        /* Features Matrix */
-        .features {
-            padding: 80px 24px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-header h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 12px;
-        }
-
-        .section-header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 11fr));
-            gap: 32px;
-        }
-
-        .card {
-            background: #FFFFFF;
-            border: 1px solid var(--border-color);
-            padding: 32px;
-            border-radius: 6px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
-            border-color: #CBD5E1;
-        }
-
-        .card-icon {
-            color: var(--primary);
+        .feature-cell h3 {
             font-size: 1.5rem;
             margin-bottom: 16px;
-            font-weight: bold;
+            letter-spacing: -0.01em;
         }
 
-        .card h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 12px;
-        }
-
-        .card p {
+        .feature-cell p {
             color: var(--text-muted);
             font-size: 0.95rem;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        /* Early Access Banner */
-        .early-access {
-            background-color: var(--bg-light);
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 60px 24px;
-            text-align: center;
+        /* Task Module Deep Dive Showcase */
+        .deep-dive-section {
+            background-color: #FFFFFF;
+            border-top: 1px solid var(--stroke-fine);
+            border-bottom: 1px solid var(--stroke-fine);
+            padding: 100px 24px;
         }
 
-        .early-container {
-            max-width: 600px;
+        .deep-dive-grid {
+            max-width: 1200px;
             margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 64px;
+            align-items: start;
         }
 
-        .early-container h3 {
-            font-size: 1.5rem;
-            color: var(--primary);
-            margin-bottom: 12px;
+        .spec-list {
+            list-style: none;
+            margin-top: 32px;
         }
 
-        .early-container p {
-            color: var(--text-muted);
-            margin-bottom: 24px;
+        .spec-item {
+            border-top: 1px solid var(--stroke-fine);
+            padding: 16px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .btn-outline {
-            display: inline-block;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            text-decoration: none;
-            padding: 10px 24px;
-            border-radius: 4px;
-            font-weight: 600;
+        .spec-item strong {
             font-size: 0.95rem;
-            transition: background-color 0.2s ease, color 0.2s ease;
+            font-weight: 600;
+            color: var(--text-main);
         }
 
-        .btn-outline:hover {
-            background-color: var(--primary);
-            color: #FFFFFF;
-        }
-
-        /* Footer */
-        footer {
-            padding: 40px 24px;
-            text-align: center;
+        .spec-item span {
             font-size: 0.9rem;
             color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
         }
 
-        .footer-links {
+        /* Mock UI Component representing the code logic exactly */
+        .mock-ui-container {
+            background-color: var(--bg-canvas);
+            border: 1px solid var(--stroke-fine);
+            border-radius: 6px;
+            padding: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .mock-ui-header {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
             margin-bottom: 16px;
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--stroke-fine);
+            padding-bottom: 8px;
         }
 
-        .footer-links a {
+        .mock-field {
+            background: #FFFFFF;
+            border: 1px solid var(--stroke-fine);
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+        
+        .mock-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: block;
+            color: var(--text-main);
+        }
+
+        /* Performance Infrastructure Section */
+        .infra-section {
+            padding: 90px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .infra-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .infra-card {
+            border: 1px solid var(--stroke-fine);
+            padding: 24px;
+            border-radius: 4px;
+            background: var(--bg-card);
+            text-align: left;
+            font-family: monospace;
+        }
+
+        .infra-card h4 {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .infra-card p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer Footer */
+        footer {
+            border-top: 1px solid var(--stroke-fine);
+            background-color: #FFFFFF;
+            padding: 60px 24px;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links-group {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links-group a {
             color: var(--text-muted);
             text-decoration: none;
         }
 
-        .footer-links a:hover {
-            color: var(--primary);
+        .footer-links-group a:hover {
+            color: var(--text-main);
         }
 
-        @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
-            .nav-links .btn-cta-sm { display: none; }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.25rem; }
+            .deep-dive-grid { grid-template-columns: 1fr; gap: 40px; }
+            .infra-grid { grid-template-columns: 1fr; }
+            .footer-inner { flex-direction: column; gap: 24px; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Navigation -->
+    <!-- Minimalism Header -->
     <header>
-        <div class="nav-container">
-            <a href="#" class="brand">
-                <img src="https://raw.githubusercontent.com/deeev2005/Gmail-to-Clio/main/logo2.png" alt="Mattermail Logo">
-                <span class="brand-name">Mattermail</span>
+        <div class="nav-inner">
+            <a href="#" class="logo-mark">
+                <img src="https://raw.githubusercontent.com/deeev2005/Gmail-to-Clio/main/logo2.png" alt="Mattermail">
+                <span>Mattermail</span>
             </a>
             <nav class="nav-links">
-                <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms of Service</a>
-                <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank" class="btn-cta-sm">Provide Feedback</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+                <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank" class="btn-black-sm">Beta Access</a>
             </nav>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- Editorial Hero -->
+    <section class="hero-section">
         <div class="hero-container">
-            <span class="badge">Google Workspace Integration</span>
-            <h1>File Correspondence, Track Billable Hours, and Manage Clio Matters Directly From Gmail</h1>
-            <p>Engineered exclusively for legal practices. Eliminate administrative workflow leakages without switching browser tabs or leaving your inbox.</p>
-            <div class="cta-group">
-                <a href="#" class="btn-main">Install Workspace Add-on</a>
-                <div class="security-notice">
-                    <span>🔒 Secured via Clio OAuth API • Enterprise Data Encryption</span>
+            <p class="hero-tagline">Clio API Infrastructure Integration</p>
+            <h1>A zero-latency inbox workspace interface for modern law firms.</h1>
+            <p class="hero-desc">Mattermail binds transactional email communication records, real-time activity metrics, and granular multi-tier task matrices directly inside Gmail. No structural context switching required.</p>
+            <div class="hero-actions">
+                <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank" class="btn-primary-lg">Deploy Open Beta Extension</a>
+                <div class="meta-specs">v1.2.0 Engine // Memory Cache Stratified // Clio V4 Protocol Authorized</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Complete Extension Engine Features Blueprint -->
+    <section class="section-padding">
+        <div class="section-title-wrapper">
+            <h2>System Capabilities Architecture</h2>
+            <p>Every operational module runs locally on Google’s V8 engine layer, communicating asynchronously with Clio endpoints[cite: 1, 3].</p>
+        </div>
+
+        <div class="feature-matrix">
+            <!-- Feature Cell 1 -->
+            <div class="feature-cell">
+                <span class="feature-cell feature-num">[01]</span>
+                <h3>Correspondence Compilation</h3>
+                <p>Scans the complete active immutable email thread data layer[cite: 1, 3]. Provides explicit structural toggles to preserve sequential correspondence either as a unified, sanitized multi-message single thread document or cleanly isolated chronological file versions mapping to the target matter ledger[cite: 1, 3].</p>
+            </div>
+            <!-- Feature Cell 2 -->
+            <div class="feature-cell">
+                <span class="feature-cell feature-num">[02]</span>
+                <h3>Quantified Activity Logger</h3>
+                <p>A native time tracking component linked into your legal billing registry[cite: 1, 3]. Translates casual time annotations (e.g., shorthand tokens like "1h 12m" or structural timestamps like "1:12") directly into precise raw millisecond integers synchronized directly with Clio’s primary activity ledger[cite: 1].</p>
+            </div>
+            <!-- Feature Cell 3 -->
+            <div class="feature-cell">
+                <span class="feature-cell feature-num">[03]</span>
+                <h3>Dynamic Attachment Isolation</h3>
+                <p>Extracts incoming data assets and prevents missing pointer issues by running early structural dependency checks[cite: 1, 3]. Allows multi-file selections via a single global toggle and pipelines those document bytes directly into a matter-specific subfolder[cite: 1, 3].</p>
+            </div>
+            <!-- Feature Cell 4 -->
+            <div class="feature-cell">
+                <span class="feature-cell feature-num">[04]</span>
+                <h3>Identity Mapping Flow</h3>
+                <p>Runs lookup mechanisms directly inside the inbox to ensure contact records are linked correctly[cite: 1]. Automatically queries Clio’s central entity database by processing email properties to pull down matching structural parameters or creates new client identity cards without requiring manual entry[cite: 1].</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exhaustive Task Module Deep Dive (User Requested) -->
+    <section class="deep-dive-section">
+        <div class="deep-dive-grid">
+            <div>
+                <div class="section-title-wrapper" style="margin-bottom: 32px;">
+                    <h2>The Task Lifecycle Engine</h2>
+                    <p>Instead of relying on generic textbox entry patterns, Mattermail features a task-generation matrix compiled using Clio's core enterprise parameters[cite: 3].</p>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">
+                    Every single task parameter parsed within the context pane is verified against your firm's cloud ecosystem data structures before dispatch[cite: 3]. This completely rules out assignment errors or unaligned processing queues[cite: 3].
+                </p>
+                
+                <ul class="spec-list">
+                    <li class="spec-item">
+                        <strong>Firm-Wide Associate Mapping</strong>
+                        <span>Queries and processes your operational firm roster directly from Clio[cite: 3]. Maps task items onto internal teammates instantly via cached select inputs right inside the inbox interface[cite: 3].</span>
+                    </li>
+                    <li class="spec-item">
+                        <strong>Dynamic Task Type Categorization</strong>
+                        <span>Queries and securely stores your preset procedural workflow types directly from Clio's database[cite: 3]. This allows you to tag tasks under compliance categories without having to retype classifications[cite: 3].</span>
+                    </li>
+                    <li class="spec-item">
+                        <strong>Automated Quick-Action Templates</strong>
+                        <span>Instantly populates common follow-up items like "Call client regarding this email" or "Review and draft response" with a single click, completely replacing manual text drafting workflows[cite: 3].</span>
+                    </li>
+                    <li class="spec-item">
+                        <strong>Precise Time and Date Allocation</strong>
+                        <span>Pairs a native system date picker with a numerical duration tracker to record estimated effort directly against project deadlines[cite: 3].</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Visual Layout Mockup of the UI_2.gs File Layout -->
+            <div class="mock-ui-container">
+                <div class="mock-ui-header">
+                    <span>Mattermail Interface Component</span>
+                    <span>Task_Module[cite: 3]</span>
+                </div>
+                
+                <span class="mock-label">Quick Templates Selection[cite: 3]</span>
+                <div class="mock-field">↳ Review and draft response</div>
+
+                <span class="mock-label">Task Name[cite: 3]</span>
+                <div class="mock-field">Follow up on: Case Brief Review</div>
+
+                <span class="mock-label">Task Priority[cite: 3]</span>
+                <div class="mock-field">⚡ High Priority</div>
+
+                <span class="mock-label">Clio Task Type Registry (Cached)[cite: 3]</span>
+                <div class="mock-field">💼 Litigation Support / Compliance Filing</div>
+
+                <span class="mock-label">Assign To Firm Associate (Synchronized)[cite: 3]</span>
+                <div class="mock-field">👤 Lead Counsel Account Pointer</div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <span class="mock-label">Due Date[cite: 3]</span>
+                        <div class="mock-field">📅 2026-06-15</div>
+                    </div>
+                    <div>
+                        <span class="mock-label">Time Estimate[cite: 3]</span>
+                        <div class="mock-field">⏱️ 1.5 Hours</div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--stroke-dark); color: white; text-align: center; padding: 10px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; margin-top: 8px;">
+                    Execute and Commit to Clio
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="features">
-        <div class="section-header">
-            <h2>Seamless Matter Workflows</h2>
-            <p>Everything required to maintain compliance and keep files up to date in Clio directly on your email pane.</p>
+    <!-- Technical Infrastructure / Optimization Explanations -->
+    <section class="infra-section">
+        <div class="section-title-wrapper" style="text-align: left; max-width: 700px; margin: 0 auto 40px auto;">
+            <h2>Optimization Architecture</h2>
+            <p>Mattermail is intentionally built to minimize standard Google Workspace payload lag[cite: 3].</p>
         </div>
-        <div class="grid">
-            <!-- Feature 1 -->
-            <div class="card">
-                <div class="card-icon">📁</div>
-                <h3>Selective Correspondence Archiving</h3>
-                <p>Log complete email communications safely to open matters. Choose between compiling conversations as sequential threads or saving critical updates as individual chronological items.</p>
+        
+        <div class="infra-grid">
+            <div class="infra-card">
+                <h4>6-Hour Throttled Sync[cite: 3]</h4>
+                <p>Throttles active DAU updates to Firestore to 6-hour cycles, completely avoiding unnecessary background data lookups[cite: 3].</p>
             </div>
-            <!-- Feature 2 -->
-            <div class="card">
-                <div class="card-icon">⏱️</div>
-                <h3>Integrated Time Entry</h3>
-                <p>Capture billable units immediately as you read or respond to updates. Post durations in multiple formats along with custom descriptive records and hourly firm rates directly into Clio Activity logs.</p>
+            <div class="infra-card">
+                <h4>Payload Optimization[cite: 3]</h4>
+                <p>Queries specific target keys down the line rather than pulling down heavy data objects, preserving snappy rendering speeds[cite: 3].</p>
             </div>
-            <!-- Feature 3 -->
-            <div class="card">
-                <div class="card-icon">📋</div>
-                <h3>Advanced Task Allocation</h3>
-                <p>Instantly deploy procedural updates using context-driven templates. Configure names, descriptions, priorities, customized task types, and assign parameters straight to your designated team associates.</p>
-            </div>
-            <!-- Feature 4 -->
-            <div class="card">
-                <div class="card-icon">📎</div>
-                <h3>Document Attachment Sync</h3>
-                <p>Isolate and process critical legal evidence files safely. Selectively batch-upload incoming or nested documentation components seamlessly into the respective Clio matter sub-folders.</p>
+            <div class="infra-card">
+                <h4>Automated Cache Flushing[cite: 3]</h4>
+                <p>Clears stored data allocations out of memory immediately on manual refresh triggers to guarantee live accuracy[cite: 3].</p>
             </div>
         </div>
     </section>
 
-    <!-- Early Access Section -->
-    <section class="early-access">
-        <div class="early-container">
-            <h3>Early Access Beta Program</h3>
-            <p>Mattermail is presently open to firms and corporate practices entirely free of charge. Take advantage of early deployment to optimize your workflows and help shape our upcoming premium tier.</p>
-            <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank" class="btn-outline">Report Bug or Request Feature</a>
-        </div>
-    </section>
-
-    <!-- Footer Elements -->
+    <!-- Footer Area -->
     <footer>
-        <div class="footer-links">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank">Technical Support</a>
+        <div class="footer-inner">
+            <div>
+                <p>&copy; 2026 Mattermail Core Engine. Open-beta ecosystem license.</p>
+                <p style="font-size: 0.75rem; margin-top: 4px; color: var(--text-muted);">Independent platform unassociated with Google Inc. or Clio Software Corp.</p>
+            </div>
+            <div class="footer-links-group">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank">Ecosystem Feedback</a>
+            </div>
         </div>
-        <p>&copy; 2026 Mattermail. All rights reserved. Mattermail is an independent integration and is not directly affiliated with Clio or Google Workspace.</p>
     </footer>
 
 </body>
