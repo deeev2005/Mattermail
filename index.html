@@ -1,1 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mattermail — Enterprise Gmail & Clio Integration for Legal Professionals</title>
+    <style>
+        :root {
+            --primary: #002F6C;
+            --primary-light: #00459E;
+            --accent: #FF6B35;
+            --accent-hover: #E55B27;
+            --text-dark: #1A2530;
+            --text-muted: #5A6578;
+            --bg-light: #F8FAFC;
+            --border-color: #E2E8F0;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-dark);
+            background-color: #FFFFFF;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation */
+        header {
+            border-bottom: 1px solid var(--border-color);
+            background: #FFFFFF;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn-cta-sm {
+            background-color: var(--primary);
+            color: #FFFFFF !important;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-cta-sm:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 24px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(248,250,252,1) 0%, rgba(255,255,255,1) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero-container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: rgba(0, 47, 108, 0.06);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--primary);
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 36px auto;
+        }
+
+        .cta-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-main {
+            background-color: var(--accent);
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-main:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .security-notice {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Features Matrix */
+        .features {
+            padding: 80px 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 11fr));
+            gap: 32px;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            padding: 32px;
+            border-radius: 6px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+            border-color: #CBD5E1;
+        }
+
+        .card-icon {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Early Access Banner */
+        .early-access {
+            background-color: var(--bg-light);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 60px 24px;
+            text-align: center;
+        }
+
+        .early-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .early-container h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .early-container p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .btn-outline {
+            display: inline-block;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            text-decoration: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: #FFFFFF;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 24px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-links {
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .nav-links .btn-cta-sm { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="brand">
+                <img src="https://raw.githubusercontent.com/deeev2005/Gmail-to-Clio/main/logo2.png" alt="Mattermail Logo">
+                <span class="brand-name">Mattermail</span>
+            </a>
+            <nav class="nav-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank" class="btn-cta-sm">Provide Feedback</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <span class="badge">Google Workspace Integration</span>
+            <h1>File Correspondence, Track Billable Hours, and Manage Clio Matters Directly From Gmail</h1>
+            <p>Engineered exclusively for legal practices. Eliminate administrative workflow leakages without switching browser tabs or leaving your inbox.</p>
+            <div class="cta-group">
+                <a href="#" class="btn-main">Install Workspace Add-on</a>
+                <div class="security-notice">
+                    <span>🔒 Secured via Clio OAuth API • Enterprise Data Encryption</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="section-header">
+            <h2>Seamless Matter Workflows</h2>
+            <p>Everything required to maintain compliance and keep files up to date in Clio directly on your email pane.</p>
+        </div>
+        <div class="grid">
+            <!-- Feature 1 -->
+            <div class="card">
+                <div class="card-icon">📁</div>
+                <h3>Selective Correspondence Archiving</h3>
+                <p>Log complete email communications safely to open matters. Choose between compiling conversations as sequential threads or saving critical updates as individual chronological items.</p>
+            </div>
+            <!-- Feature 2 -->
+            <div class="card">
+                <div class="card-icon">⏱️</div>
+                <h3>Integrated Time Entry</h3>
+                <p>Capture billable units immediately as you read or respond to updates. Post durations in multiple formats along with custom descriptive records and hourly firm rates directly into Clio Activity logs.</p>
+            </div>
+            <!-- Feature 3 -->
+            <div class="card">
+                <div class="card-icon">📋</div>
+                <h3>Advanced Task Allocation</h3>
+                <p>Instantly deploy procedural updates using context-driven templates. Configure names, descriptions, priorities, customized task types, and assign parameters straight to your designated team associates.</p>
+            </div>
+            <!-- Feature 4 -->
+            <div class="card">
+                <div class="card-icon">📎</div>
+                <h3>Document Attachment Sync</h3>
+                <p>Isolate and process critical legal evidence files safely. Selectively batch-upload incoming or nested documentation components seamlessly into the respective Clio matter sub-folders.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Early Access Section -->
+    <section class="early-access">
+        <div class="early-container">
+            <h3>Early Access Beta Program</h3>
+            <p>Mattermail is presently open to firms and corporate practices entirely free of charge. Take advantage of early deployment to optimize your workflows and help shape our upcoming premium tier.</p>
+            <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank" class="btn-outline">Report Bug or Request Feature</a>
+        </div>
+    </section>
+
+    <!-- Footer Elements -->
+    <footer>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank">Technical Support</a>
+        </div>
+        <p>&copy; 2026 Mattermail. All rights reserved. Mattermail is an independent integration and is not directly affiliated with Clio or Google Workspace.</p>
+    </footer>
+
+</body>
+</html>
