@@ -9,14 +9,14 @@
         .container { background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         h1 { font-size: 2em; margin-bottom: 5px; color: #1a1a1a; }
         h2 { font-size: 1.4em; margin-top: 30px; border-bottom: 2px solid #eee; padding-bottom: 10px; color: #2c3e50; }
-        h3 { font-size: 1.1em; margin-top: 20px; color: #1a1a1a; }
         p, li { font-size: 1.05em; color: #555; }
         ul { margin-top: 10px; padding-left: 20px; }
         li { margin-bottom: 8px; }
         .last-updated { color: #888; font-style: italic; margin-bottom: 30px; }
         a { color: #0056b3; text-decoration: none; }
         a:hover { text-decoration: underline; }
-        .google-disclosure { background-color: #f8f9fa; border-left: 4px solid #4285f4; padding: 15px; margin: 20px 0; font-weight: 500; color: #1a1a1a; }
+        .google-disclosure { background-color: #f8f9fa; border-left: 4px solid #4285f4; padding: 15px; margin: 20px 0; font-weight: 500; }
+        .code-snippet { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -24,75 +24,49 @@
         <h1>Privacy Policy</h1>
         <div class="last-updated">Last Updated: June 2026</div>
 
-        <p>Mattermail ("we", "our", or "us") is committed to protecting your privacy and ensuring the highest level of security for your professional communications. This Privacy Policy comprehensively explains how we collect, use, process, and safeguard your information when you install and use the Mattermail Google Workspace Add-on (the "Service").</p>
+        <p>Mattermail ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use the Mattermail Google Workspace Add-on.</p>
 
         <div class="google-disclosure">
             Mattermail's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes" target="_blank">Google API Services User Data Policy</a>, including the Limited Use requirements.
         </div>
 
-        <h2>1. Information We Access and Process</h2>
-        <p>Mattermail operates on a strict "least privilege" architecture. We only request and access the precise data scopes necessary to facilitate the transfer of information between your Google Workspace and your authorized Clio account.</p>
-        
-        <h3>A. Google Workspace Data</h3>
+        <h2>1. Infrastructure & Direct Processing</h2>
+        <p>Mattermail is built entirely on the <strong>Google Apps Script</strong> infrastructure. All data processing occurs strictly within Google's secure server environment. When you save an email, the add-on communicates directly with Clio's API. <strong>There are no middleman servers</strong> routing, reading, or intercepting your emails or Clio case data.</p>
+
+        <h2>2. Information We Access and How We Use It</h2>
+        <p>Mattermail is designed with a "least privilege" architecture. We only access the exact data necessary to perform the functions you explicitly request.</p>
         <ul>
-            <li><strong>Active Email Content:</strong> We only access the specific, currently active email thread (including metadata like Sender, Recipient, Subject, Timestamp, Body Content, and Attachments) that you have explicitly opened and chosen to file.</li>
-            <li><strong>Primary Email Address:</strong> We access your authenticated Google account email address solely to power our automated "Safety Net" protocol, which alerts you via email if a background synchronization job fails.</li>
+            <li><strong>Active Email Data:</strong> When you open the add-on, we read the specific, currently active email thread (and its attachments) that you have chosen to view. This data is instantly formatted and transmitted directly to your authorized Clio account.</li>
+            <li><strong>Background Queues:</strong> To handle exceptionally large email threads, data may be temporarily held in your account's secure Google Apps Script properties for approximately 1 to 2 minutes while processing. It is permanently deleted the moment the sync completes or fails.</li>
+            <li><strong>Local Caching & Preferences:</strong> To improve app performance and loading times, we utilize Google Apps Script's native cache to temporarily save non-sensitive UI preferences (such as your last selected matter ID or dropdown states).</li>
         </ul>
 
-        <h3>B. Clio Manage Data</h3>
+        <h2>3. Analytics, Subscription Management, & Database Security</h2>
+        <p>To provide customer support, manage subscriptions, resolve user queries, and track basic Daily Active User (DAU) metrics, we maintain a secure administrative database using Google Firebase.</p>
+        <p><strong>What we store in Firebase:</strong></p>
         <ul>
-            <li><strong>Contextual Fetching:</strong> To render the Add-on UI, we temporarily fetch your open matters, task types, and firm users from your Clio account. This allows you to select the correct filing destinations.</li>
-            <li><strong>Filing Submissions:</strong> When you execute a save action, we transmit the selected email data to create Communications, Task Entries, Time Logs, and Document Uploads in your Clio workspace.</li>
+            <li><strong>Clio ID:</strong> Your unique identifier from Clio to link your account.</li>
+            <li><strong>Name & Email:</strong> Used exclusively to communicate with you for support and to send automated "Safety Net" error alerts if a sync fails.</li>
+            <li><strong>Subscription Data:</strong> Your current <span class="code-snippet">plan</span> (e.g., free/premium), <span class="code-snippet">subscription_status</span> (e.g., trial), and an <span class="code-snippet">expires_at</span> timestamp.</li>
+            <li><strong>Activity Data:</strong> A <span class="code-snippet">last_active</span> timestamp to measure daily active usage of the add-on.</li>
+        </ul>
+        <p><strong>Database Security & Access:</strong> The Firebase database is strictly locked down. There are no public URLs or open endpoints capable of modifying this data. Read and write permissions are exclusively restricted to our internal Google Apps Script server, which authenticates using a highly secure, private Service Account Key.</p>
+
+        <h2>4. Information We Do Not Collect</h2>
+        <ul>
+            <li>We <strong>do not</strong> read or access your inbox history, spam, or any emails outside the specific thread you are currently viewing.</li>
+            <li>We <strong>do not</strong> store your email content, attachments, or Clio matter details in our Firebase database or any external servers.</li>
+            <li>We <strong>do not</strong> store or see your Clio passwords. Authorization is handled securely via standard OAuth2 protocols.</li>
         </ul>
 
-        <h3>C. Analytics and System Logs</h3>
-        <ul>
-            <li><strong>Usage Metrics:</strong> We utilize a secure, anonymized Firebase database to track high-level Daily Active User (DAU) metrics. This is limited to pinging when the application is opened to monitor overall system health and server loads.</li>
-        </ul>
+        <h2>5. Data Sharing and Disclosure</h2>
+        <p><strong>We do not sell, rent, or trade your personal data to third parties.</strong> Data is only transmitted to third-party services (like Clio) when you explicitly authorize the connection and click "Save."</p>
 
-        <h2>2. Information We Explicitly Do Not Collect</h2>
-        <p>To ensure total compliance with legal privilege and confidentiality standards, we enforce strict data boundaries:</p>
-        <ul>
-            <li><strong>No Global Inbox Access:</strong> We do not read, scan, index, or access your inbox history, spam folders, or any email threads outside of the specific message you are actively viewing in the Add-on sidebar.</li>
-            <li><strong>No Persistent Storage of Client Data:</strong> We do not store your email content, attachment files, or Clio matter details on any external or proprietary servers. The data flows directly from Google's servers to Clio's servers via secure API requests.</li>
-            <li><strong>No Credential Harvesting:</strong> We do not capture, see, or store your Clio account passwords. All authentication is handled through standardized, secure OAuth 2.0 protocols.</li>
-        </ul>
+        <h2>6. Data Retention and Deletion</h2>
+        <p>Because we do not store your emails or task data on our servers, there is no personal data for us to retain. You can revoke Mattermail's access to your Google Account or Clio Account at any time through your respective security settings. If you wish to have your administrative Firebase record (Name, Email, Subscription status) deleted, please contact us directly.</p>
 
-        <h2>3. Data Retention and Temporary Background Processing</h2>
-        <p>Because we do not maintain a centralized database for your communications, there is no personal or client data for us to retain long-term.</p>
-        <ul>
-            <li><strong>Ephemeral Queues:</strong> If you elect to save a large email thread or multiple heavy attachments, the data payload is temporarily held in your own Google Workspace's secure Apps Script Property Store for approximately 1 to 2 minutes while the background worker processes the upload.</li>
-            <li><strong>Immediate Destruction:</strong> The moment the synchronization to Clio either successfully completes or registers a terminal failure, this temporary data packet is permanently and irreversibly deleted from the queue.</li>
-        </ul>
-
-        <h2>4. Data Sharing and Third-Party Disclosures</h2>
-        <p><strong>We absolutely do not sell, rent, trade, or monetize your personal data, email content, or usage metrics to any third parties, advertisers, or data brokers.</strong></p>
-        <p>Your data is only transmitted to third-party services under the following specific conditions:</p>
-        <ul>
-            <li><strong>To Clio Manage:</strong> Information is transmitted to Clio solely when you explicitly click the "Save to Clio" (or equivalent) button to fulfill your requested workflow.</li>
-            <li><strong>To Google LLC:</strong> As the Service is hosted on Google's Apps Script infrastructure, data processing inherently occurs within Google's secure cloud environments, subject to Google's enterprise security standards.</li>
-        </ul>
-
-        <h2>5. Security Measures</h2>
-        <p>We implement robust, industry-standard technical measures to protect your data during transit:</p>
-        <ul>
-            <li>All data transfers between Google, the Mattermail Service, and Clio occur over heavily encrypted HTTPS/TLS connections.</li>
-            <li>API tokens and authentication keys are securely stored within Google's encrypted credential management systems, inaccessible to the public or external systems.</li>
-        </ul>
-
-        <h2>6. Your Rights and Revoking Access</h2>
-        <p>You maintain absolute control over the Service's access to your accounts. You may instantly revoke Mattermail's permissions at any time without prior notice by:</p>
-        <ul>
-            <li>Navigating to your Google Account Security Settings and removing Mattermail from your "Third-party apps with account access" list.</li>
-            <li>Navigating to your Clio Manage Application settings and deauthorizing the Mattermail integration.</li>
-        </ul>
-        <p>Revoking access will immediately sever the Service's ability to read your active emails or push data to Clio.</p>
-
-        <h2>7. Changes to This Privacy Policy</h2>
-        <p>We reserve the right to update or modify this Privacy Policy as our Service evolves or as required by changing regulatory standards. If significant changes are made concerning how we handle your data, we will attempt to notify you via the email address associated with your account or through a prominent notice within the Add-on UI. Continued use of the Service following any updates constitutes your acceptance of the revised Policy.</p>
-
-        <h2>8. Contact Us</h2>
-        <p>If you have any questions, concerns, or requests regarding this Privacy Policy, our data handling practices, or your compliance requirements, please contact the developer, Manya Verma, directly by submitting an inquiry through our <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank">Feedback & Support Form</a>.</p>
+        <h2>7. Contact Us</h2>
+        <p>If you have any questions about this Privacy Policy or how your data is handled, please contact the developer, Manya Verma, by submitting a request through our <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank">Feedback & Support Form</a>.</p>
     </div>
 </body>
 </html>
