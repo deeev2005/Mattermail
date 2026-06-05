@@ -1,38 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - Mattermail</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 40px 20px; background-color: #fafafa; }
-        .container { background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        h1 { font-size: 2em; margin-bottom: 5px; color: #1a1a1a; }
-        h2 { font-size: 1.4em; margin-top: 30px; border-bottom: 2px solid #eee; padding-bottom: 10px; color: #2c3e50; }
-        p, li { font-size: 1.05em; color: #555; }
-        ul { margin-top: 10px; padding-left: 20px; }
-        li { margin-bottom: 8px; }
-        .last-updated { color: #888; font-style: italic; margin-bottom: 30px; }
-        a { color: #0056b3; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .legal-alert { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; color: #856404; font-size: 0.95em; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms of Service - Mattermail</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #EEF4FB;
+    --cream-dark: #D8E8F6;
+    --navy: #0C3567;
+    --navy-mid: #1A4F96;
+    --gold: #1565C0;
+    --gold-light: #2196F3;
+    --slate: #3D5A78;
+    --slate-light: #5A7A96;
+    --border: #B8D0E8;
+    --white: #FFFFFF;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--navy);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(238, 244, 251, 0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--navy);
+  }
+
+  .nav-logo {
+    width: 32px;
+    height: 32px;
+    background: var(--navy);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-logo svg { width: 18px; height: 18px; fill: var(--cream); }
+
+  .nav-wordmark {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .nav-right { display: flex; align-items: center; gap: 28px; }
+
+  .nav-link {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--slate);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--navy); }
+
+  .btn-nav {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white);
+    background: var(--navy);
+    border: none;
+    padding: 9px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: background 0.2s;
+  }
+  .btn-nav:hover { background: var(--navy-mid); }
+
+  /* ── LEGAL CONTAINER ── */
+  .legal-page {
+    padding: 120px 48px 80px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .legal-content {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 48px;
+    box-shadow: 0 10px 30px rgba(12, 53, 103, 0.05);
+  }
+
+  .legal-content h1 {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  .legal-content h2 {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-top: 40px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+
+  .legal-content p, .legal-content li {
+    font-size: 15px;
+    color: var(--slate);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+
+  .legal-content ul {
+    margin-bottom: 24px;
+    padding-left: 24px;
+  }
+
+  .last-updated {
+    font-size: 13px;
+    color: var(--slate-light);
+    margin-bottom: 40px;
+    font-style: italic;
+  }
+
+  .legal-content a {
+    color: var(--gold-light);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .legal-content a:hover {
+    color: var(--navy);
+    text-decoration: underline;
+  }
+
+  .alert-box {
+    background: #1565C012;
+    border-left: 4px solid var(--gold);
+    padding: 18px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .alert-box.warning {
+    background: #FEFCF8;
+    border-left-color: #F59E0B;
+    color: #92400E;
+  }
+
+  .alert-box.warning strong {
+    color: #b45309;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 48px;
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+  }
+
+  .footer-brand {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .footer-links { display: flex; gap: 24px; }
+
+  .footer-link {
+    font-size: 12.5px;
+    color: var(--slate-light);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--navy); }
+
+  .footer-legal {
+    font-size: 12px;
+    color: var(--slate-light);
+  }
+</style>
 </head>
 <body>
-    <div class="container">
+
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+        <polyline points="22,6 12,13 2,6" stroke="#F7F4EF" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="nav-wordmark">Mattermail</span>
+  </a>
+  <div class="nav-right">
+    <a href="index.html#features" class="nav-link">Features</a>
+    <a href="index.html#how-it-works" class="nav-link">How It Works</a>
+    <a href="index.html#tasks" class="nav-link">Tasks & Time</a>
+    <a href="privacy-policy.html" class="nav-link">Privacy</a>
+    <a href="terms-of-service.html" class="nav-link">Terms</a>
+    <a href="https://workspace.google.com/marketplace" class="btn-nav">Install Free →</a>
+  </div>
+</nav>
+
+<div class="legal-page">
+    <div class="legal-content">
         <h1>Terms of Service</h1>
         <div class="last-updated">Last Updated: June 2026</div>
 
         <p>By installing, activating, or utilizing the Mattermail Google Workspace Add-on ("the Service"), you agree to be legally bound by these Terms of Service. If you do not agree to these terms, you are strictly prohibited from using the Service.</p>
 
-        <div class="legal-alert">
+        <div class="alert-box warning">
             <strong>IMPORTANT LEGAL NOTICE FOR LEGAL PROFESSIONALS:</strong> Use of this Service does not constitute legal advice, nor does it establish an attorney-client relationship between the Service developers and you, your firm, or your clients.
         </div>
 
         <h2>1. Description of Service & Regional Limitations</h2>
         <p>Mattermail acts strictly as a data conduit bridging Gmail and Clio Manage. It allows users to extract email text, attachments, time logs, and task details from their local Gmail window and transmit it to their authorized third-party Clio account. </p>
         <ul>
-            <li><strong>Geographic Restrictions:</strong> The Service is optimized, hosted, and officially supported exclusively for Clio accounts operating within the **United States and Mexico** server regions. </li>
+            <li><strong>Geographic Restrictions:</strong> The Service is optimized, hosted, and officially supported exclusively for Clio accounts operating within the <strong>United States and Mexico</strong> server regions. </li>
             <li><strong>Unauthorized Access:</strong> Any attempt to utilize the Service with Clio instances hosted in other regional jurisdictions (including but not limited to Canada, Europe, or Australia) via VPNs, proxy servers, or alternative technical configurations is entirely unsupported and violates these terms. We assume zero liability for data failure resulting from unauthorized regional usage.</li>
         </ul>
 
@@ -55,7 +278,7 @@
 
         <h2>5. Strict Limitation of Liability & Indemnification</h2>
         <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL MATTERMAIL, ITS DEVELOPERS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES WHATEVER.</p>
-        <p>THIS INCLUDES, WITHOUT LIMITATION, LOSS OF PROFITS, DATA LOSS, CORRUPTION OF CLIENT RECORDS, COMPUTER FAILURE, OR **ANY SPECIAL DAMAGES ARISING FROM LEGAL MALPRACTICE CLAIMS, MISSED COURT DEADLINES, FAILURE TO MEET STATUTES OF LIMITATIONS, OR DISCIPLINARY ACTIONS** SUFFERED BY YOU OR YOUR FIRM RESULTING FROM SOFTWARE BUGS, TIMEOUTS, OR THE DELAYED EXECUTION OF BACKGROUND SYNCHRONIZATION JOBS.</p>
+        <p>THIS INCLUDES, WITHOUT LIMITATION, LOSS OF PROFITS, DATA LOSS, CORRUPTION OF CLIENT RECORDS, COMPUTER FAILURE, OR <strong>ANY SPECIAL DAMAGES ARISING FROM LEGAL MALPRACTICE CLAIMS, MISSED COURT DEADLINES, FAILURE TO MEET STATUTES OF LIMITATIONS, OR DISCIPLINARY ACTIONS</strong> SUFFERED BY YOU OR YOUR FIRM RESULTING FROM SOFTWARE BUGS, TIMEOUTS, OR THE DELAYED EXECUTION OF BACKGROUND SYNCHRONIZATION JOBS.</p>
         <p><strong>Maximum Financial Liability Cap:</strong> In the event of any data loss, service failure, or proven liability, our total cumulative liability to you shall be strictly limited to refunding the subscription fee you previously paid for the add-on. If you are using the Service on a free or early-access basis, our total liability to you is expressly limited to zero dollars ($0.00). We will not pay any compensation, damages, or settlements beyond the return of your paid subscription fee.</p>
         <p><strong>Indemnification:</strong> You agree to defend, indemnify, and hold harmless Mattermail and its developer, Deepesh Verma, from and against any third-party claims, damages, obligations, losses, liabilities, costs, or malpractice actions brought by your clients or opposing counsel arising from your deployment or reliance on this Service.</p>
 
@@ -72,7 +295,32 @@
         <p>If any provision of these Terms is found to be unenforceable or invalid under any applicable law, such unenforceability or invalidity shall not render these Terms unenforceable or invalid as a whole, and such provisions shall be deleted without affecting the remaining provisions herein.</p>
 
         <h2>10. Contact Information</h2>
-        <p>If you have any questions about this please contact support on email - automatic.self.attendance@gmail.com</p>
+        <p>If you have any questions about this please contact support on email - <a href="mailto:automatic.self.attendance@gmail.com">automatic.self.attendance@gmail.com</a></p>
     </div>
+</div>
+
+<footer>
+  <div class="footer-brand">Mattermail</div>
+  <div class="footer-links">
+    <a href="https://forms.gle/GzeL86UKqW9WdJkR8" class="footer-link">Feedback</a>
+    <a href="privacy-policy.html" class="footer-link">Privacy Policy</a>
+    <a href="terms-of-service.html" class="footer-link">Terms of Service</a>
+    <a href="https://workspace.google.com/marketplace" class="footer-link">Google Workspace Marketplace</a>
+    <a href="https://clio.com" class="footer-link">Clio</a>
+  </div>
+  <div class="footer-legal">Gmail × Clio Integration · Early Access</div>
+</footer>
+
+<script>
+  // Nav shadow on scroll
+  var nav = document.querySelector('nav');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 10) {
+      nav.style.boxShadow = '0 1px 20px rgba(12,53,103,0.07)';
+    } else {
+      nav.style.boxShadow = 'none';
+    }
+  });
+</script>
 </body>
 </html>
