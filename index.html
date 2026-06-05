@@ -986,6 +986,92 @@
   .fade-in-3 { animation-delay: 0.34s; }
   .fade-in-4 { animation-delay: 0.46s; }
   .fade-in-5 { animation-delay: 0.58s; }
+
+  /* ── RESPONSIVE DESIGN (ADDED HERE) ── */
+  @media (max-width: 1024px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 120px 32px 60px;
+      gap: 40px;
+    }
+    .hero-sub {
+      max-width: 100%;
+    }
+    .deep-feature, .trust-inner {
+      grid-template-columns: 1fr;
+      padding: 64px 32px;
+      gap: 40px;
+    }
+    .deep-feature.reverse {
+      direction: ltr; /* Fix stacking order for RTL section */
+    }
+    .features-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .mockup-body {
+      grid-template-columns: 1fr;
+    }
+    .email-pane {
+      border-right: none;
+      border-bottom: 1px solid #EAEDF2;
+      border-bottom-left-radius: 0;
+    }
+    .addon-pane {
+      border-bottom-left-radius: 9px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      padding: 0 24px;
+    }
+    .nav-link {
+      display: none; /* Hide navigation links on smaller screens to prioritize CTA */
+    }
+    h1 {
+      font-size: 42px;
+    }
+    h2 {
+      font-size: 32px;
+    }
+    .section, .how-wrap, .cta-section {
+      padding: 60px 24px;
+    }
+    .features-grid, .steps {
+      grid-template-columns: 1fr;
+    }
+    footer {
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      text-align: center;
+    }
+    .footer-links {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 36px;
+    }
+    .hero-actions {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .hero-trust {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .trust-item {
+      flex-wrap: wrap;
+    }
+    .cta-actions {
+      flex-direction: column;
+    }
+  }
 </style>
 </head>
 <body>
