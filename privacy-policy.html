@@ -37,11 +37,26 @@
         <p>Mattermail is designed with a "least privilege" architecture. We only access the exact data necessary to perform the functions you explicitly request.</p>
         <ul>
             <li><strong>Active Email Data:</strong> When you open the add-on, we read the specific, currently active email thread (and its attachments) that you have chosen to view. This data is instantly formatted and transmitted directly to your authorized Clio account.</li>
+            <li><strong>Inline Image Processing:</strong> When preparing an email for upload to Clio, the add-on scans the email's HTML for embedded images and fetches them from their source URLs (including Google-hosted image URLs, using your secure OAuth token) in order to embed them directly into the Clio document. No image data is stored by Mattermail; it is passed directly to Clio.</li>
+            <li><strong>Automatic Contact Creation:</strong> Clio's API requires all email parties (senders and recipients) to exist as Contacts before a communication can be filed. If a contact is not found in your Clio account, Mattermail will automatically create one using only the name and email address visible in the email header. This data is written directly to your own Clio account and is not stored by Mattermail.</li>
+            <li><strong>Time Entries:</strong> If you choose to log a time entry, the duration, description, and hourly rate you enter are transmitted directly to your Clio account. This data is not stored by Mattermail.</li>
+            <li><strong>Task Creation:</strong> If you choose to create a task, the task name, description, priority, assignee, due date, and time estimate you enter are transmitted directly to your Clio account. This data is not stored by Mattermail.</li>
             <li><strong>Background Queues:</strong> To handle exceptionally large email threads, data may be temporarily held in your account's secure Google Apps Script properties for approximately 1 to 2 minutes while processing. It is permanently deleted the moment the sync completes or fails.</li>
-            <li><strong>Local Caching & Preferences:</strong> To improve app performance and loading times, we utilize Google Apps Script's native cache to temporarily save non-sensitive UI preferences (such as your last selected matter ID or dropdown states).</li>
+            <li><strong>Local Caching & Preferences:</strong> To improve app performance and loading times, we utilize Google Apps Script's native cache to temporarily store your last selected matter ID, your Clio matters list (including matter numbers and descriptions), task types, and your Clio users list (names and IDs). Additionally, your last selected matter is saved in Google Apps Script's user properties and is retained until you log out. This data never leaves Google's infrastructure and is never transmitted to Mattermail's servers.</li>
         </ul>
 
-        <h2>3. Analytics, Subscription Management, & Database Security</h2>
+        <h2>3. Clio API Access (OAuth Scopes)</h2>
+        <p>To perform its functions, Mattermail requests the following permission scopes from your Clio account via the standard OAuth2 protocol:</p>
+        <ul>
+            <li><span class="code-snippet">activities</span> — To log time entries against matters.</li>
+            <li><span class="code-snippet">communications</span> — To file emails as communication records in Clio.</li>
+            <li><span class="code-snippet">contacts</span> — To look up existing contacts and automatically create new ones for email senders/recipients, which is required by Clio's API to file a communication.</li>
+            <li><span class="code-snippet">documents</span> — To upload email attachments and original email files to matter folders in Clio.</li>
+            <li><span class="code-snippet">matters</span> — To retrieve your list of open matters so you can select which matter to file the email under.</li>
+            <li><span class="code-snippet">tasks</span> — To create tasks in Clio directly from your inbox.</li>
+        </ul>
+
+        <h2>4. Analytics, Subscription Management, & Database Security</h2>
         <p>To provide customer support, manage subscriptions, resolve user queries, and track basic Daily Active User (DAU) metrics, we maintain a secure administrative database using Google Firebase.</p>
         <p><strong>What we store in Firebase:</strong></p>
         <ul>
@@ -52,20 +67,23 @@
         </ul>
         <p><strong>Database Security & Access:</strong> The Firebase database is strictly locked down. There are no public URLs or open endpoints capable of modifying this data. Read and write permissions are exclusively restricted to our internal Google Apps Script server, which authenticates using a highly secure, private Service Account Key.</p>
 
-        <h2>4. Information We Do Not Collect</h2>
+        <h2>5. Information We Do Not Collect</h2>
         <ul>
             <li>We <strong>do not</strong> read or access your inbox history, spam, or any emails outside the specific thread you are currently viewing.</li>
-            <li>We <strong>do not</strong> store your email content, attachments, or Clio matter details in our Firebase database or any external servers.</li>
+            <li>We <strong>do not</strong> store your email content, attachments, time entries, task data, or Clio matter details in our Firebase database or any external servers.</li>
             <li>We <strong>do not</strong> store or see your Clio passwords. Authorization is handled securely via standard OAuth2 protocols.</li>
         </ul>
 
-        <h2>5. Data Sharing and Disclosure</h2>
+        <h2>6. Data Sharing and Disclosure</h2>
         <p><strong>We do not sell, rent, or trade your personal data to third parties.</strong> Data is only transmitted to third-party services (like Clio) when you explicitly authorize the connection and click "Save."</p>
 
-        <h2>6. Data Retention and Deletion</h2>
+        <h2>7. Geographic Availability</h2>
+        <p>Mattermail currently supports users in the <strong>United States and Mexico</strong> only. Support for additional regions is actively in development.</p>
+
+        <h2>8. Data Retention and Deletion</h2>
         <p>Because we do not store your emails or task data on our servers, there is no personal data for us to retain. You can revoke Mattermail's access to your Google Account or Clio Account at any time through your respective security settings. If you wish to have your administrative Firebase record (Name, Email, Subscription status) deleted, please contact us directly.</p>
 
-        <h2>7. Contact Us</h2>
+        <h2>9. Contact Us</h2>
         <p>If you have any questions about this Privacy Policy or how your data is handled, please contact the developer, Manya Verma, by submitting a request through our <a href="https://forms.gle/GzeL86UKqW9WdJkR8" target="_blank">Feedback & Support Form</a>.</p>
     </div>
 </body>
