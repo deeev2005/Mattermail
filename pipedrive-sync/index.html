@@ -186,50 +186,42 @@
 </head>
 <body>
 
-    <!-- Navigation & Top Right Tabs -->
     <nav>
         <a href="#" class="nav-brand">
             <img src="https://raw.githubusercontent.com/deeev2005/Mattermail/refs/heads/main/pipedrive-sync/pipedrive%20logo.png" alt="Mattermail Logo">
             <h2>Mattermail</h2>
         </a>
         
-        <!-- Tab Buttons Moved to Navbar -->
         <div class="nav-tabs">
-            <button class="tablinks" onclick="openLegalTab(event, 'Privacy')" id="defaultOpen">Privacy Policy</button>
-            <button class="tablinks" onclick="openLegalTab(event, 'Terms')">Terms of Service</button>
+            <button class="tablinks" id="btn-privacy" onclick="openLegalTab(event, 'Privacy', '#privacy')">Privacy Policy</button>
+            <button class="tablinks" id="btn-terms" onclick="openLegalTab(event, 'Terms', '#terms')">Terms of Service</button>
         </div>
     </nav>
 
-    <!-- Upgraded Hero Section -->
     <header>
-        <h1>Inbox to Pipedrive in One Click</h1>
+        <h1>Inbox to Pipeline in One Click</h1>
         <p>Streamline your sales workflow directly from Gmail. Effortlessly synchronize conversations, manage active deals, and coordinate tasks without switching tabs.</p>
         <a href="#" class="cta-btn">Install Add-on for Google Workspace</a>
     </header>
 
-    <!-- Dynamic Iframe Container -->
     <section class="content-wrapper">
-        <!-- Privacy Policy Tab -->
         <div id="Privacy" class="tabcontent">
             <iframe src="https://mattermail.me/pipedrive-sync/privacy.html" title="Privacy Policy"></iframe>
         </div>
 
-        <!-- Terms of Service Tab -->
         <div id="Terms" class="tabcontent">
             <iframe src="https://mattermail.me/pipedrive-sync/tos.html" title="Terms of Service"></iframe>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <p>Have questions or found a bug? <a href="https://forms.gle/YiHWVpBCgo4HFVRe7" target="_blank">Submit Feedback & Bug Reports</a></p>
         <p class="footer-note">Mattermail is an independent integration for Pipedrive and is not officially affiliated with Pipedrive Inc.<br>
         &copy; 2026 Deepesh Verma. All rights reserved.</p>
     </footer>
 
-    <!-- JavaScript for Tab Switching -->
     <script>
-        function openLegalTab(evt, tabName) {
+        function openLegalTab(evt, tabName, hash) {
             var i, tabcontent, tablinks;
             
             // Hide all tab content
@@ -244,13 +236,43 @@
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
             
-            // Show the selected tab and set button state to active
+            // Show the selected tab
             document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
+            
+            // Set the correct button to active
+            if (evt) {
+                evt.currentTarget.className += " active";
+            } else {
+                if (tabName === 'Terms') document.getElementById('btn-terms').className += " active";
+                if (tabName === 'Privacy') document.getElementById('btn-privacy').className += " active";
+            }
+
+            // Update the URL in the browser without reloading the page
+            if (hash && window.location.hash !== hash) {
+                window.history.pushState(null, null, hash);
+            }
         }
 
-        // Automatically open the Privacy Policy tab on page load
-        document.getElementById("defaultOpen").click();
+        // Run this when the page first loads to check if a user shared a specific link
+        window.onload = function() {
+            var currentHash = window.location.hash;
+            if (currentHash === '#terms') {
+                openLegalTab(null, 'Terms', '#terms');
+            } else {
+                // Default fallback is Privacy Policy
+                openLegalTab(null, 'Privacy', '#privacy');
+            }
+        };
+
+        // Listen for the user clicking the Back/Forward arrows in their browser
+        window.addEventListener('popstate', function() {
+            var currentHash = window.location.hash;
+            if (currentHash === '#terms') {
+                openLegalTab(null, 'Terms', null);
+            } else {
+                openLegalTab(null, 'Privacy', null);
+            }
+        });
     </script>
 
 </body>
