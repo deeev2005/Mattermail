@@ -3,180 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mattermail for Pipedrive - Sync Gmail & CRM</title>
+    <title>Mattermail for Pipedrive | Smart CRM Sync</title>
     <style>
         :root {
-            --primary-color: #0B57D0;
-            --secondary-color: #00B289;
-            --text-color: #333333;
-            --bg-color: #f8f9fa;
+            --primary: #00B289; /* Pipedrive Green */
+            --primary-hover: #009673;
+            --text-main: #1a1a1a;
+            --text-muted: #5f6368;
+            --bg-light: #f8f9fc;
+            --white: #ffffff;
+            --border: #e2e8f0;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            color: var(--text-color);
-            background-color: #ffffff;
+            color: var(--text-main);
+            background-color: var(--bg-light);
             line-height: 1.6;
         }
 
-        /* Navbar */
+        /* Modern Navigation Bar */
         nav {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            border-bottom: 1px solid #eaeaea;
+            padding: 16px 5%;
+            background-color: var(--white);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        nav img {
-            height: 40px;
-            margin-right: 15px;
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
         }
-        nav h2 {
+
+        .nav-brand img {
+            height: 38px;
+        }
+
+        .nav-brand h2 {
             margin: 0;
             font-size: 22px;
-            color: #000;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        /* Top Right Tab System */
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-tabs button {
+            background: transparent;
+            border: 2px solid transparent;
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-tabs button:hover {
+            color: var(--primary);
+            background-color: rgba(0, 178, 137, 0.08);
+        }
+
+        .nav-tabs button.active {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(0, 178, 137, 0.3);
         }
 
         /* Hero Section */
         header {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
+            padding: 70px 20px 90px;
             text-align: center;
-            padding: 80px 20px;
-            background-color: var(--bg-color);
+            border-bottom: 1px solid var(--border);
         }
+
         header h1 {
-            font-size: 42px;
-            margin-bottom: 20px;
-            color: #111;
+            font-size: 46px;
+            font-weight: 800;
+            margin: 0 0 16px;
+            letter-spacing: -1px;
+            color: var(--text-main);
         }
+
         header p {
-            font-size: 18px;
-            max-width: 600px;
-            margin: 0 auto 30px auto;
-            color: #555;
+            font-size: 19px;
+            max-width: 650px;
+            margin: 0 auto 32px;
+            color: var(--text-muted);
         }
+
         .cta-btn {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px 30px;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 14px 32px;
             text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 700;
             border-radius: 8px;
-            transition: background-color 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 178, 137, 0.3);
+            transition: all 0.2s;
+            display: inline-block;
         }
+
         .cta-btn:hover {
-            background-color: #0842a0;
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 178, 137, 0.4);
         }
 
-        /* Tabbed Section */
-        .legal-section {
+        /* Content & Iframe Area */
+        .content-wrapper {
             max-width: 1000px;
-            margin: 60px auto;
+            margin: -40px auto 60px; /* Pulls content up over the hero border */
             padding: 0 20px;
-        }
-        
-        /* Style the tabs */
-        .tab {
-            overflow: hidden;
-            border-bottom: 2px solid #eaeaea;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .tab button {
-            background-color: inherit;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 14px 24px;
-            transition: 0.3s;
-            font-size: 18px;
-            font-weight: bold;
-            color: #777;
-            border-bottom: 3px solid transparent;
-        }
-        .tab button:hover {
-            color: var(--primary-color);
-        }
-        .tab button.active {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
+            position: relative;
+            z-index: 10;
         }
 
-        /* Style the tab content */
         .tabcontent {
             display: none;
-            animation: fadeEffect 1s;
-        }
-        @keyframes fadeEffect {
-            from {opacity: 0;}
-            to {opacity: 1;}
+            background: var(--white);
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
+            animation: fadeIn 0.4s ease-out;
         }
 
-        /* Iframe styling for embedded documents */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         iframe {
             width: 100%;
-            height: 75vh;
-            border: 1px solid #eaeaea;
+            height: 70vh;
+            border: none;
             border-radius: 8px;
-            background-color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
         /* Footer */
         footer {
             text-align: center;
             padding: 40px 20px;
-            background-color: #111;
-            color: #fff;
-            margin-top: 40px;
+            background-color: var(--white);
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 14px;
         }
+
         footer a {
-            color: var(--secondary-color);
+            color: var(--primary);
             text-decoration: none;
+            font-weight: 600;
         }
+
         footer a:hover {
             text-decoration: underline;
+        }
+
+        .footer-note {
+            margin-top: 15px;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
 
+    <!-- Navigation & Top Right Tabs -->
     <nav>
-        <img src="https://raw.githubusercontent.com/deeev2005/Mattermail/refs/heads/main/pipedrive-sync/pipedrive%20logo.png" alt="Mattermail Logo">
-        <h2>Mattermail</h2>
+        <a href="#" class="nav-brand">
+            <img src="https://raw.githubusercontent.com/deeev2005/Mattermail/refs/heads/main/pipedrive-sync/pipedrive%20logo.png" alt="Mattermail Logo">
+            <h2>Mattermail</h2>
+        </a>
+        
+        <!-- Tab Buttons Moved to Navbar -->
+        <div class="nav-tabs">
+            <button class="tablinks" onclick="openLegalTab(event, 'Privacy')" id="defaultOpen">Privacy Policy</button>
+            <button class="tablinks" onclick="openLegalTab(event, 'Terms')">Terms of Service</button>
+        </div>
     </nav>
 
+    <!-- Upgraded Hero Section -->
     <header>
-        <h1>Connect Your Pipedrive Account</h1>
-        <p>Streamline your sales workflow directly from your inbox. Effortlessly synchronize conversations, log tracking metrics, manage active deals, and coordinate tasks without leaving Gmail.</p>
-        <a href="#" class="cta-btn">Install Add-on from Google Workspace</a>
+        <h1>Inbox to Pipeline in One Click</h1>
+        <p>Streamline your sales workflow directly from Gmail. Effortlessly synchronize conversations, manage active deals, and coordinate tasks without switching tabs.</p>
+        <a href="#" class="cta-btn">Install Add-on for Google Workspace</a>
     </header>
 
-    <section class="legal-section">
-        <div class="tab">
-            <button class="tablinks active" onclick="openTab(event, 'Privacy')">Privacy Policy</button>
-            <button class="tablinks" onclick="openTab(event, 'Terms')">Terms of Service</button>
-        </div>
-
-        <div id="Privacy" class="tabcontent" style="display: block;">
+    <!-- Dynamic Iframe Container -->
+    <section class="content-wrapper">
+        <!-- Privacy Policy Tab -->
+        <div id="Privacy" class="tabcontent">
             <iframe src="https://mattermail.me/pipedrive-sync/privacy.html" title="Privacy Policy"></iframe>
         </div>
 
+        <!-- Terms of Service Tab -->
         <div id="Terms" class="tabcontent">
             <iframe src="https://mattermail.me/pipedrive-sync/tos.html" title="Terms of Service"></iframe>
         </div>
     </section>
 
+    <!-- Footer -->
     <footer>
-        <p>Mattermail is an integration for Pipedrive, not an affiliation.</p>
-        <p>Have questions? <a href="https://forms.gle/YiHWVpBCgo4HFVRe7" target="_blank">Submit Feedback & Bug Reports</a></p>
-        <p>&copy; 2026 Deepesh Verma. All rights reserved.</p>
+        <p>Have questions or found a bug? <a href="https://forms.gle/YiHWVpBCgo4HFVRe7" target="_blank">Submit Feedback & Bug Reports</a></p>
+        <p class="footer-note">Mattermail is an independent integration for Pipedrive and is not officially affiliated with Pipedrive Inc.<br>
+        &copy; 2026 Deepesh Verma. All rights reserved.</p>
     </footer>
 
+    <!-- JavaScript for Tab Switching -->
     <script>
-        function openTab(evt, tabName) {
+        function openLegalTab(evt, tabName) {
             var i, tabcontent, tablinks;
             
             // Hide all tab content
@@ -191,10 +244,13 @@
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
             
-            // Show the current tab, and add an "active" class to the button that opened the tab
+            // Show the selected tab and set button state to active
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
+
+        // Automatically open the Privacy Policy tab on page load
+        document.getElementById("defaultOpen").click();
     </script>
 
 </body>
