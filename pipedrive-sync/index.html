@@ -56,13 +56,13 @@
             letter-spacing: -0.5px;
         }
 
-        /* Top Right Tab System */
+        /* Top Right Navigation Links */
         .nav-tabs {
             display: flex;
             gap: 12px;
         }
 
-        .nav-tabs button {
+        .nav-tabs a {
             background: transparent;
             border: 2px solid transparent;
             color: var(--text-muted);
@@ -71,26 +71,20 @@
             padding: 8px 18px;
             border-radius: 50px;
             cursor: pointer;
+            text-decoration: none;
             transition: all 0.2s ease-in-out;
         }
 
-        .nav-tabs button:hover {
+        .nav-tabs a:hover {
             color: var(--primary);
             background-color: rgba(0, 178, 137, 0.08);
         }
 
-        .nav-tabs button.active {
-            background-color: var(--primary);
-            color: var(--white);
-            box-shadow: 0 4px 10px rgba(0, 178, 137, 0.3);
-        }
-
-        /* Hero Section */
+        /* Upgraded Hero Section */
         header {
             background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
-            padding: 70px 20px 90px;
+            padding: 120px 20px 140px; /* Increased padding to fill the screen nicely */
             text-align: center;
-            border-bottom: 1px solid var(--border);
         }
 
         header h1 {
@@ -125,37 +119,6 @@
             background-color: var(--primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(0, 178, 137, 0.4);
-        }
-
-        /* Content & Iframe Area */
-        .content-wrapper {
-            max-width: 1000px;
-            margin: -40px auto 60px; /* Pulls content up over the hero border */
-            padding: 0 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .tabcontent {
-            display: none;
-            background: var(--white);
-            border-radius: 12px;
-            padding: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border: 1px solid var(--border);
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        iframe {
-            width: 100%;
-            height: 70vh;
-            border: none;
-            border-radius: 8px;
         }
 
         /* Footer */
@@ -193,8 +156,8 @@
         </a>
         
         <div class="nav-tabs">
-            <button class="tablinks" id="btn-privacy" onclick="openLegalTab(event, 'Privacy', '#privacy')">Privacy Policy</button>
-            <button class="tablinks" id="btn-terms" onclick="openLegalTab(event, 'Terms', '#terms')">Terms of Service</button>
+            <a href="https://mattermail.me/pipedrive-sync/privacy.html">Privacy Policy</a>
+            <a href="https://mattermail.me/pipedrive-sync/tos.html">Terms of Service</a>
         </div>
     </nav>
 
@@ -204,76 +167,11 @@
         <a href="#" class="cta-btn">Install Add-on for Google Workspace</a>
     </header>
 
-    <section class="content-wrapper">
-        <div id="Privacy" class="tabcontent">
-            <iframe src="https://mattermail.me/pipedrive-sync/privacy.html" title="Privacy Policy"></iframe>
-        </div>
-
-        <div id="Terms" class="tabcontent">
-            <iframe src="https://mattermail.me/pipedrive-sync/tos.html" title="Terms of Service"></iframe>
-        </div>
-    </section>
-
     <footer>
         <p>Have questions or found a bug? <a href="https://forms.gle/YiHWVpBCgo4HFVRe7" target="_blank">Submit Feedback & Bug Reports</a></p>
         <p class="footer-note">Mattermail is an independent integration for Pipedrive and is not officially affiliated with Pipedrive Inc.<br>
         &copy; 2026 Deepesh Verma. All rights reserved.</p>
     </footer>
-
-    <script>
-        function openLegalTab(evt, tabName, hash) {
-            var i, tabcontent, tablinks;
-            
-            // Hide all tab content
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            
-            // Remove the active class from all tab buttons
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            
-            // Show the selected tab
-            document.getElementById(tabName).style.display = "block";
-            
-            // Set the correct button to active
-            if (evt) {
-                evt.currentTarget.className += " active";
-            } else {
-                if (tabName === 'Terms') document.getElementById('btn-terms').className += " active";
-                if (tabName === 'Privacy') document.getElementById('btn-privacy').className += " active";
-            }
-
-            // Update the URL in the browser without reloading the page
-            if (hash && window.location.hash !== hash) {
-                window.history.pushState(null, null, hash);
-            }
-        }
-
-        // Run this when the page first loads to check if a user shared a specific link
-        window.onload = function() {
-            var currentHash = window.location.hash;
-            if (currentHash === '#terms') {
-                openLegalTab(null, 'Terms', '#terms');
-            } else {
-                // Default fallback is Privacy Policy
-                openLegalTab(null, 'Privacy', '#privacy');
-            }
-        };
-
-        // Listen for the user clicking the Back/Forward arrows in their browser
-        window.addEventListener('popstate', function() {
-            var currentHash = window.location.hash;
-            if (currentHash === '#terms') {
-                openLegalTab(null, 'Terms', null);
-            } else {
-                openLegalTab(null, 'Privacy', null);
-            }
-        });
-    </script>
 
 </body>
 </html>
