@@ -311,6 +311,7 @@
             <li><strong>Name & Email:</strong> Used exclusively to communicate with you for support and to send automated "Safety Net" error alerts if a sync fails.</li>
             <li><strong>Subscription Data:</strong> Your current <span class="code-snippet">plan</span> (e.g., free/premium), <span class="code-snippet">subscription_status</span> (e.g., trial), and an <span class="code-snippet">expires_at</span> timestamp.</li>
             <li><strong>Activity Data:</strong> A <span class="code-snippet">last_active</span> timestamp to measure daily active usage of the add-on.</li>
+            <li><strong>Usage Event Logs:</strong> For each action you take in the add-on, we log the <span class="code-snippet">event name</span> (e.g., which feature was used), the <span class="code-snippet">time of execution</span>, and the <span class="code-snippet">duration</span> it took to complete. These logs are used solely to monitor performance and reliability and do not contain email content, attachments, or Clio matter data.</li>
         </ul>
         <p><strong>Database Security & Access:</strong> The Firebase database is strictly locked down. There are no public URLs or open endpoints capable of modifying this data. Read and write permissions are exclusively restricted to our internal Google Apps Script server, which authenticates using a highly secure, private Service Account Key.</p>
 
