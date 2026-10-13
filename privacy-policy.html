@@ -270,69 +270,95 @@
 <div class="legal-page">
     <div class="legal-content">
         <h1>Privacy Policy</h1>
-        <div class="last-updated">Last Updated: June 2026</div>
+        <div class="last-updated">Last Updated: October 2026</div>
 
-        <p>Mattermail ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use the Mattermail Google Workspace Add-on.</p>
+        <p>Mattermail ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use Mattermail, including the <strong>Mattermail Google Workspace Add-on</strong> and the <strong>Mattermail Google Chrome Extension</strong> (collectively, the "Service").</p>
 
         <div class="alert-box">
-            Mattermail's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes" target="_blank">Google API Services User Data Policy</a>, including the Limited Use requirements.
+            Mattermail's use and transfer to any other app of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes" target="_blank">Google API Services User Data Policy</a> (including the Limited Use requirements) and the <a href="https://developer.chrome.com/docs/webstore/program-policies/user-data/" target="_blank">Chrome Web Store Developer Program Policies</a>.
         </div>
 
         <h2>1. Infrastructure & Direct Processing</h2>
-        <p>Mattermail is built entirely on the <strong>Google Apps Script</strong> infrastructure. All data processing occurs strictly within Google's secure server environment. When you save an email, the add-on communicates directly with Clio's API. <strong>There are no middleman servers</strong> routing, reading, or intercepting your emails or Clio case data.</p>
+        <p>Mattermail is architected with a strict privacy-first, client-direct model across both platforms:</p>
+        <ul>
+            <li><strong>Google Workspace Add-on:</strong> Executes directly within Google Apps Script's secure server environment.</li>
+            <li><strong>Google Chrome Extension:</strong> Executes client-side directly within your Google Chrome browser on Gmail (<span class="code-snippet">mail.google.com</span>).</li>
+        </ul>
+        <p>When you file an email or document, communication occurs directly between your client session and Clio's official API (<span class="code-snippet">app.clio.com</span>) and Clio's secure AWS S3 document storage. <strong>There are no middleman servers</strong> routing, reading, or intercepting your email bodies, attachments, or Clio client files.</p>
 
         <h2>2. Information We Access and How We Use It</h2>
-        <p>Mattermail is designed with a "least privilege" architecture. We only access the exact data necessary to perform the functions you explicitly request.</p>
+        <p>Mattermail is built under the principle of least privilege. We only access the data strictly necessary to execute the actions you explicitly trigger:</p>
         <ul>
-            <li><strong>Active Email Data:</strong> When you open the add-on, we read the specific, currently active email thread (and its attachments) that you have chosen to view. This data is instantly formatted and transmitted directly to your authorized Clio account.</li>
-            <li><strong>Inline Image Processing:</strong> When preparing an email for upload to Clio, the add-on scans the email's HTML for embedded images and fetches them from their source URLs (including Google-hosted image URLs, using your secure OAuth token) in order to embed them directly into the Clio document. No image data is stored by Mattermail; it is passed directly to Clio.</li>
-            <li><strong>Automatic Contact Creation:</strong> Clio's API requires all email parties (senders and recipients) to exist as Contacts before a communication can be filed. If a contact is not found in your Clio account, Mattermail will automatically create one using only the name and email address visible in the email header. This data is written directly to your own Clio account and is not stored by Mattermail.</li>
-            <li><strong>Time Entries:</strong> If you choose to log a time entry, the duration, description, and hourly rate you enter are transmitted directly to your Clio account. This data is not stored by Mattermail.</li>
-            <li><strong>Task Creation:</strong> If you choose to create a task, the task name, description, priority, assignee, due date, and time estimate you enter are transmitted directly to your Clio account. This data is not stored by Mattermail.</li>
-            <li><strong>Local Caching & Preferences:</strong> To improve app performance and loading times, we utilize Google Apps Script's native cache to temporarily store your last selected matter ID, your Clio matters list (including matter numbers and descriptions), task types, and your Clio users list (names and IDs). Additionally, your last selected matter is saved in Google Apps Script's user properties and is retained until you log out. This data never leaves Google's infrastructure and is never transmitted to Mattermail's servers.</li>
+            <li><strong>Active Email Data:</strong> When you open the add-on or expand the Chrome extension sidebar drawer, we read the specific, active email thread you are viewing (sender, recipients, date, subject, body, and attached files). This content is packaged into formatted records or PDFs and uploaded directly to your authorized Clio account.</li>
+            <li><strong>Attachment & Inline Image Processing:</strong> When saving emails and attachments to Clio, attached documents (PDFs, spreadsheets, images, Word docs) and inline graphics are fetched directly from your authenticated Gmail session and uploaded straight to your designated Clio matter folder. No email content or attachment binaries are stored on our servers.</li>
+            <li><strong>Automatic Contact Creation:</strong> Clio's API requires email parties (senders and recipients) to exist as Contacts before an email communication can be logged. If a sender or recipient is not already in your Clio contacts, Mattermail creates a contact using only the name and email address from the email header. This contact is saved directly to your Clio account and is not retained by Mattermail.</li>
+            <li><strong>Time Entries & Hourly Rates:</strong> When you record a time entry, the duration, work description, and hourly billing rate you provide are sent directly to Clio via its API.</li>
+            <li><strong>Task Creation:</strong> When creating follow-up tasks, the task title, description, priority, assignee, due date, and estimated time are transmitted directly to your Clio account.</li>
+            <li><strong>Local Caching & User Preferences:</strong>
+                <ul>
+                    <li>In the <em>Google Workspace Add-on</em>: Temporary preferences (such as your last selected matter ID, task types, and matter lists) are held in Google Apps Script's native cache and user properties.</li>
+                    <li>In the <em>Chrome Extension</em>: Settings, recent billing rates, cached task types, matter lists, and filed thread indicator badges are stored locally on your device via Chrome's native storage API (<span class="code-snippet">chrome.storage.local</span>). This local cache resides exclusively on your machine and never leaves your browser.</li>
+                </ul>
+            </li>
         </ul>
 
-        <h2>3. Clio API Access (OAuth Scopes)</h2>
-        <p>To perform its functions, Mattermail requests the following permission scopes from your Clio account via the standard OAuth2 protocol:</p>
+        <h2>3. Clio API Scopes & Chrome Extension Permissions</h2>
+        <p><strong>Clio OAuth Scopes:</strong> To interact with Clio Manage, Mattermail requests standard OAuth2 permission scopes:</p>
         <ul>
-            <li><span class="code-snippet">activities</span> — To log time entries against matters.</li>
-            <li><span class="code-snippet">communications</span> — To file emails as communication records in Clio.</li>
-            <li><span class="code-snippet">contacts</span> — To look up existing contacts and automatically create new ones for email senders/recipients, which is required by Clio's API to file a communication.</li>
-            <li><span class="code-snippet">documents</span> — To upload email attachments and original email files to matter folders in Clio.</li>
-            <li><span class="code-snippet">matters</span> — To retrieve your list of open matters so you can select which matter to file the email under.</li>
-            <li><span class="code-snippet">tasks</span> — To create tasks in Clio directly from your inbox.</li>
+            <li><span class="code-snippet">activities</span> — To log billable and non-billable time entries.</li>
+            <li><span class="code-snippet">communications</span> — To file email threads into Clio communication logs.</li>
+            <li><span class="code-snippet">contacts</span> — To match existing contacts and create required email sender/recipient contacts.</li>
+            <li><span class="code-snippet">documents</span> — To upload email attachments and generated email PDFs directly to matter folders.</li>
+            <li><span class="code-snippet">matters</span> — To retrieve open matters so you can select the correct filing destination.</li>
+            <li><span class="code-snippet">tasks</span> — To create matter-associated tasks directly from your inbox.</li>
         </ul>
 
-        <h2>4. Analytics, Subscription Management, & Database Security</h2>
-        <p>To provide customer support, manage subscriptions, resolve user queries, and track basic Daily Active User (DAU) metrics, we maintain a secure administrative database using Google Firebase.</p>
-        <p><strong>What we store in Firebase:</strong></p>
+        <p><strong>Chrome Extension Browser Permissions:</strong> The Chrome extension requests only the minimum host and API permissions required for functionality:</p>
         <ul>
-            <li><strong>Clio ID:</strong> Your unique identifier from Clio to link your account.</li>
-            <li><strong>Name & Email:</strong> Used exclusively to communicate with you for support and to send automated "Safety Net" error alerts if a sync fails.</li>
-            <li><strong>Subscription Data:</strong> Your current <span class="code-snippet">plan</span> (e.g., free/premium), <span class="code-snippet">subscription_status</span> (e.g., trial), and an <span class="code-snippet">expires_at</span> timestamp.</li>
-            <li><strong>Activity Data:</strong> A <span class="code-snippet">last_active</span> timestamp to measure daily active usage of the add-on.</li>
-            <li><strong>Usage Event Logs:</strong> For each action you take in the add-on, we log the <span class="code-snippet">event name</span> (e.g., which feature was used), the <span class="code-snippet">time of execution</span>, and the <span class="code-snippet">duration</span> it took to complete. These logs are used solely to monitor performance and reliability and do not contain email content, attachments, or Clio matter data.</li>
+            <li><span class="code-snippet">activeTab</span> &amp; <span class="code-snippet">https://mail.google.com/*</span> — To display the in-page sidebar drawer and read the active email thread when you open Mattermail in Gmail.</li>
+            <li><span class="code-snippet">storage</span> — To save user preferences, cached rates, and filed thread indicators locally in your browser.</li>
+            <li><span class="code-snippet">identity</span> — To launch the secure Clio OAuth authorization window without exposing client secrets.</li>
+            <li><span class="code-snippet">https://app.clio.com/*</span> &amp; <span class="code-snippet">https://*.amazonaws.com/*</span> — To communicate with Clio's REST API and upload documents directly to Clio's S3 storage.</li>
+            <li><span class="code-snippet">https://*.supabase.co/*</span> — To connect to our secure backend authentication proxy and synchronize filing indicators.</li>
         </ul>
-        <p><strong>Database Security & Access:</strong> The Firebase database is strictly locked down. There are no public URLs or open endpoints capable of modifying this data. Read and write permissions are exclusively restricted to our internal Google Apps Script server, which authenticates using a highly secure, private Service Account Key.</p>
+
+        <h2>4. Backend Database, Subscriptions & Account Sync</h2>
+        <p>To provide customer support, manage subscription statuses, facilitate OAuth authentication, and synchronize filed email badges across browser sessions, we maintain a secure cloud database backend (Supabase / PostgreSQL).</p>
+        <p><strong>What we store on our backend:</strong></p>
+        <ul>
+            <li><strong>Clio Account ID:</strong> Your unique Clio user identifier to link your active license.</li>
+            <li><strong>Name &amp; Email:</strong> To identify your account for support and billing administration.</li>
+            <li><strong>Subscription Status:</strong> Your active <span class="code-snippet">plan</span> (e.g., free/trial/paid), <span class="code-snippet">subscription_status</span>, and <span class="code-snippet">expires_at</span> timestamp.</li>
+            <li><strong>Activity Timestamps:</strong> A <span class="code-snippet">last_active</span> timestamp to track active usage.</li>
+            <li><strong>Execution &amp; Reliability Logs:</strong> Function names, completion durations (in milliseconds), and error messages to monitor service uptime and fix bugs.</li>
+            <li><strong>Thread Filing Metadata:</strong> Gmail thread IDs and associated Clio matter IDs to display visual "Filed in Clio" badges and indicators in your inbox across devices.</li>
+        </ul>
+        <p><strong>What we NEVER store on our backend:</strong> We do <strong>not</strong> store email message bodies, email contents, attachment files, client legal notes, or passwords in our backend database. All sensitive email data flows directly from your Gmail window into Clio.</p>
+        <p><strong>Backend Security:</strong> All communications with our backend are strictly encrypted in transit using industry-standard HTTPS/TLS. Database access is restricted with Row Level Security (RLS) policies and authentication tokens.</p>
 
         <h2>5. Information We Do Not Collect</h2>
         <ul>
-            <li>We <strong>do not</strong> read or access your inbox history, spam, or any emails outside the specific thread you are currently viewing.</li>
-            <li>We <strong>do not</strong> store your email content, attachments, time entries, task data, or Clio matter details in our Firebase database or any external servers.</li>
-            <li>We <strong>do not</strong> store or see your Clio passwords. Authorization is handled securely via standard OAuth2 protocols.</li>
+            <li>We <strong>do not</strong> scan, read, or catalog your general inbox, sent items, or unviewed messages. We only access the single email thread you explicitly choose to view or save.</li>
+            <li>We <strong>do not</strong> store or see your Google account password or Clio password. All authentication is handled through OAuth2 tokens.</li>
+            <li>We <strong>do not</strong> use your data for advertising, marketing profiling, or credit scoring.</li>
         </ul>
 
         <h2>6. Data Sharing and Disclosure</h2>
-        <p><strong>We do not sell, rent, or trade your personal data to third parties.</strong> Data is only transmitted to third-party services (like Clio) when you explicitly authorize the connection and click "Save."</p>
+        <p><strong>We do not sell, rent, monetize, or trade your personal data to third parties.</strong> Data is only transmitted to third-party services (such as Clio) when you initiate an action and explicitly click "Save to Clio" or "Log Time."</p>
 
         <h2>7. Geographic Availability</h2>
-        <p>Mattermail currently supports users in the <strong>United States and Mexico</strong> only. Support for additional regions is actively in development.</p>
+        <p>Mattermail currently supports Clio accounts operating in the <strong>United States and Mexico</strong> regions. Expansion to additional global regions is underway.</p>
 
         <h2>8. Data Retention and Deletion</h2>
-        <p>Because we do not store your emails or task data on our servers, there is no personal data for us to retain. You can revoke Mattermail's access to your Google Account or Clio Account at any time through your respective security settings. If you wish to have your administrative Firebase record (Name, Email, Subscription status) deleted, please contact us directly.</p>
+        <p>Because Mattermail does not retain email bodies or attachments on its servers, there is no email content to delete. You can manage your data as follows:</p>
+        <ul>
+            <li><strong>Local Storage:</strong> Uninstalling the Chrome extension or logging out removes all cached data, filing indicators, and stored tokens from your browser immediately.</li>
+            <li><strong>OAuth Access:</strong> You can revoke Mattermail's access at any time through your Google Security Settings or Clio Connected Apps dashboard.</li>
+            <li><strong>Backend Account Records:</strong> To request deletion of your administrative account record (Name, Email, Subscription history), email us at the contact address below and we will purge your record promptly.</li>
+        </ul>
 
         <h2>9. Contact Us</h2>
-        <p>If you have any questions about this Privacy Policy or how your data is handled, please contact on email - <a href="mailto:automatic.self.attendance@gmail.com">automatic.self.attendance@gmail.com</a></p>
+        <p>If you have any questions about this Privacy Policy or your data, please contact us by email: <a href="mailto:automatic.self.attendance@gmail.com">automatic.self.attendance@gmail.com</a></p>
     </div>
 </div>
 
@@ -342,6 +368,7 @@
     <a href="https://forms.gle/GzeL86UKqW9WdJkR8" class="footer-link">Feedback</a>
     <a href="privacy-policy.html" class="footer-link">Privacy Policy</a>
     <a href="terms-of-service.html" class="footer-link">Terms of Service</a>
+    <a href="https://chromewebstore.google.com" class="footer-link">Chrome Web Store</a>
     <a href="https://workspace.google.com/marketplace" class="footer-link">Google Workspace Marketplace</a>
     <a href="https://clio.com" class="footer-link">Clio</a>
   </div>
