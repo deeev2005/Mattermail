@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Macros Transfer – Convert Excel VBA Macros to Google Apps Script</title>
+  <meta name="description" content="Macros Transfer is a Google Sheets add-on that converts Excel VBA macros into Google Apps Script and moves your workbook to Google Sheets, with a clear compatibility report.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary:#1a73e8; --primary-hover:#1557b0; --primary-dark:#174ea6; --primary-subtle:#e8f0fe;
+      --surface:#ffffff; --bg:#f8f9fa; --border:#dadce0; --border-light:#e8eaed;
+      --text:#202124; --text-secondary:#5f6368; --success:#137333; --success-bg:#e6f4ea;
+      --warn:#b06000; --warn-bg:#fef7e0; --error:#c5221f; --error-bg:#fce8e6;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:var(--text); background:var(--surface); line-height:1.6; -webkit-font-smoothing:antialiased; }
+    a { color:var(--primary); text-decoration:none; }
+    .container { max-width:1080px; margin:0 auto; padding:0 20px; }
+
+    /* Nav */
+    header { position:sticky; top:0; z-index:10; background:rgba(255,255,255,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--border-light); }
+    .nav { display:flex; align-items:center; justify-content:space-between; height:60px; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:600; font-size:17px; color:var(--text); }
+    .brand-logo { width:30px; height:30px; border-radius:7px; background:var(--primary); display:flex; align-items:center; justify-content:center; }
+    .nav-links { display:flex; align-items:center; gap:22px; font-size:14px; }
+    .nav-links a.link { color:var(--text-secondary); font-weight:500; }
+    .nav-links a.link:hover { color:var(--primary); }
+
+    /* Buttons */
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 22px; border-radius:6px; font-size:15px; font-weight:500; border:1px solid transparent; cursor:pointer; transition:background .15s, box-shadow .15s; font-family:inherit; }
+    .btn-primary { background:var(--primary); color:#fff; }
+    .btn-primary:hover { background:var(--primary-hover); box-shadow:0 2px 8px rgba(26,115,232,.35); }
+    .btn-ghost { background:#fff; color:var(--primary); border-color:var(--border); }
+    .btn-ghost:hover { background:var(--primary-subtle); }
+    .btn-sm { padding:8px 16px; font-size:13px; }
+
+    /* Hero */
+    .hero { padding:72px 0 56px; background:linear-gradient(180deg,var(--primary-subtle) 0%,#fff 100%); }
+    .hero-grid { display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:center; }
+    .eyebrow { display:inline-block; background:#fff; border:1px solid var(--border); color:var(--primary-dark); font-size:12px; font-weight:600; padding:4px 12px; border-radius:20px; margin-bottom:18px; letter-spacing:.3px; }
+    h1 { font-size:46px; line-height:1.12; font-weight:700; letter-spacing:-.8px; margin-bottom:18px; }
+    h1 span { color:var(--primary); }
+    .lead { font-size:18px; color:var(--text-secondary); max-width:520px; margin-bottom:28px; }
+    .cta-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+    .fine { font-size:13px; color:var(--text-secondary); }
+
+    /* Sidebar mock */
+    .mock-wrap { display:flex; justify-content:center; }
+    .mock { width:300px; background:#fff; border:1px solid var(--border); border-radius:10px; box-shadow:0 12px 40px rgba(60,64,67,.18); padding:12px; font-size:11px; }
+    .mock-bar { display:flex; justify-content:space-between; align-items:center; background:var(--bg); border:1px solid var(--border-light); border-radius:4px; padding:10px; margin-bottom:12px; }
+    .mock-user { display:flex; align-items:center; gap:8px; font-weight:600; }
+    .avatar { width:24px; height:24px; border-radius:50%; background:var(--primary-subtle); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; }
+    .badge { font-size:10px; font-weight:500; padding:2px 6px; border-radius:2px; text-transform:uppercase; background:#f1f3f4; color:var(--text-secondary); letter-spacing:.3px; }
+    .mock-tabs { display:flex; border-bottom:1px solid var(--border-light); margin-bottom:12px; }
+    .mock-tabs div { flex:1; text-align:center; padding:8px 4px; font-weight:600; color:var(--text-secondary); }
+    .mock-tabs .on { color:var(--primary); border-bottom:2px solid var(--primary); }
+    .mock-drop { border:1px dashed var(--border); border-radius:4px; padding:16px 12px; text-align:center; }
+    .mock-ico { width:32px; height:32px; margin:0 auto 6px; background:var(--primary-subtle); border-radius:3px; display:flex; align-items:center; justify-content:center; }
+    .mock-chip { display:flex; gap:8px; align-items:center; background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:8px 10px; margin-top:8px; }
+    .mock-chip small { color:var(--text-secondary); font-size:10px; display:block; }
+    .mock-btn { background:var(--primary); color:#fff; text-align:center; padding:10px; border-radius:3px; margin-top:12px; font-size:12px; font-weight:500; }
+    .mock-done { margin-top:10px; background:var(--success-bg); border:1px solid #ceead6; color:var(--success); border-radius:3px; padding:8px 10px; font-weight:600; }
+
+    /* Sections */
+    section { padding:72px 0; }
+    .alt { background:var(--bg); }
+    .sec-head { text-align:center; max-width:640px; margin:0 auto 44px; }
+    .sec-head h2 { font-size:32px; letter-spacing:-.4px; margin-bottom:10px; }
+    .sec-head p { color:var(--text-secondary); font-size:16px; }
+
+    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .step { background:#fff; border:1px solid var(--border-light); border-radius:10px; padding:26px; }
+    .num { width:34px; height:34px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; margin-bottom:14px; }
+    .step h3 { font-size:17px; margin-bottom:6px; }
+    .step p { font-size:14.5px; color:var(--text-secondary); }
+
+    .features { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .feat { background:#fff; border:1px solid var(--border-light); border-radius:10px; padding:24px; transition:box-shadow .2s, transform .2s; }
+    .feat:hover { box-shadow:0 6px 20px rgba(60,64,67,.12); transform:translateY(-2px); }
+    .feat .ic { width:40px; height:40px; border-radius:8px; background:var(--primary-subtle); display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+    .feat h3 { font-size:16px; margin-bottom:6px; }
+    .feat p { font-size:14px; color:var(--text-secondary); }
+
+    /* Code preview */
+    .compare { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .code-card { border:1px solid var(--border); border-radius:10px; overflow:hidden; background:#fff; }
+    .code-head { padding:10px 16px; font-size:12px; font-weight:600; letter-spacing:.3px; }
+    .code-head.vba { background:var(--warn-bg); color:var(--warn); }
+    .code-head.gas { background:var(--primary-subtle); color:var(--primary-dark); }
+    pre { font-family:'Roboto Mono',monospace; font-size:12.5px; padding:16px; overflow-x:auto; line-height:1.7; color:#3c4043; }
+    .kw { color:#1a73e8; } .cm { color:#80868b; } .st { color:#137333; }
+
+    /* Limits */
+    .limits { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .box { border-radius:10px; padding:26px; border:1px solid; }
+    .box.ok { background:var(--success-bg); border-color:#ceead6; }
+    .box.no { background:var(--warn-bg); border-color:#fde293; }
+    .box h3 { font-size:16px; margin-bottom:10px; }
+    .box.ok h3 { color:var(--success); } .box.no h3 { color:var(--warn); }
+    .box ul { padding-left:20px; font-size:14.5px; }
+    .box li { margin-bottom:6px; }
+
+    /* FAQ */
+    .faq { max-width:760px; margin:0 auto; }
+    details { background:#fff; border:1px solid var(--border-light); border-radius:8px; margin-bottom:10px; padding:0 20px; }
+    summary { cursor:pointer; padding:16px 0; font-weight:500; font-size:15.5px; list-style:none; display:flex; justify-content:space-between; align-items:center; }
+    summary::-webkit-details-marker { display:none; }
+    summary::after { content:'+'; font-size:22px; color:var(--primary); }
+    details[open] summary::after { content:'–'; }
+    details p { padding:0 0 16px; color:var(--text-secondary); font-size:14.5px; }
+
+    /* CTA */
+    .cta { background:var(--primary); color:#fff; text-align:center; padding:64px 0; }
+    .cta h2 { font-size:32px; margin-bottom:10px; }
+    .cta p { opacity:.9; margin-bottom:26px; font-size:16px; }
+    .btn-white { background:#fff; color:var(--primary); }
+    .btn-white:hover { background:var(--primary-subtle); }
+
+    footer { background:#202124; color:#bdc1c6; padding:32px 0; font-size:13.5px; }
+    .foot { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center; }
+    .foot a { color:#bdc1c6; margin-left:18px; }
+    .foot a:first-child { margin-left:0; }
+    .foot a:hover { color:#fff; }
+
+    /* Tab switcher */
+    .nav-tab-group {
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      background:var(--bg);
+      padding:4px;
+      border-radius:30px;
+      border:1px solid var(--border);
+    }
+    .nav-tab {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 16px;
+      border-radius:24px;
+      font-size:13.5px;
+      font-weight:500;
+      color:var(--text-secondary);
+      text-decoration:none;
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      transition:all .15s ease;
+      font-family:inherit;
+      white-space:nowrap;
+    }
+    .nav-tab:hover {
+      color:var(--text);
+      background:rgba(0,0,0,.04);
+    }
+    .nav-tab.active {
+      background:#fff;
+      color:var(--primary);
+      font-weight:600;
+      box-shadow:0 1px 3px rgba(60,64,67,.18);
+    }
+    .nav-tab svg { flex-shrink:0; }
+
+    /* Policy & TOS card presentation */
+    .legal-page-wrap { max-width:880px; margin:0 auto; padding:40px 20px 80px; }
+    .legal-toolbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+    .legal-card {
+      background:#fff;
+      border:1px solid var(--border-light);
+      border-radius:12px;
+      box-shadow:0 4px 24px rgba(60,64,67,.06);
+      padding:44px;
+    }
+    .legal-card h1 { font-size:32px; margin:0 0 8px; color:var(--text); }
+    .legal-card h2 { font-size:20px; margin:36px 0 10px; color:var(--primary); border-bottom:1px solid var(--border-light); padding-bottom:6px; }
+    .legal-card h3 { font-size:16px; margin:22px 0 8px; }
+    .legal-card p, .legal-card li { font-size:14.5px; color:#3c4043; line-height:1.7; }
+    .legal-card ul, .legal-card ol { padding-left:24px; margin-bottom:14px; }
+    .legal-card li { margin-bottom:6px; }
+    .legal-card .meta { color:var(--text-secondary); font-size:13px; margin-bottom:22px; }
+    .legal-card table { width:100%; border-collapse:collapse; margin:16px 0; font-size:13.5px; border-radius:6px; overflow:hidden; border:1px solid var(--border-light); }
+    .legal-card th, .legal-card td { border:1px solid var(--border-light); padding:10px 14px; text-align:left; vertical-align:top; }
+    .legal-card th { background:var(--primary-subtle); color:var(--primary-dark); font-weight:600; }
+    .legal-card .note { background:var(--primary-subtle); border-left:4px solid var(--primary); padding:14px 18px; border-radius:6px; font-size:14.5px; margin:20px 0; color:#174ea6; }
+
+    @media (max-width:860px) {
+      .nav-tab-group { gap:2px; padding:3px; }
+      .nav-tab { padding:6px 10px; font-size:12.5px; gap:4px; }
+      .nav-links .sub-links { display:none !important; }
+      .legal-card { padding:24px 18px; }
+      .nav { height:auto; padding:10px 0; flex-wrap:wrap; gap:12px; }
+    }
+
+
+    @media (max-width:860px) {
+      .hero-grid, .compare, .limits { grid-template-columns:1fr; }
+      .steps, .features { grid-template-columns:1fr; }
+      h1 { font-size:34px; }
+      .nav-links a.link { display:none; }
+      .hero { padding-top:48px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="#home" class="brand" onclick="switchTab('home', true); return false;">
+      <span class="brand-logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+      </span>
+      Macros Transfer
+    </a>
+
+    <div class="nav-tab-group" role="tablist" aria-label="Page Tabs">
+      <button class="nav-tab active" data-tab="home" onclick="switchTab('home', true)" role="tab" aria-selected="true" id="tab-btn-home">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Overview</span>
+      </button>
+      <button class="nav-tab" data-tab="privacy" onclick="switchTab('privacy', true)" role="tab" aria-selected="false" id="tab-btn-privacy">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span>Privacy Policy</span>
+      </button>
+      <button class="nav-tab" data-tab="tos" onclick="switchTab('tos', true)" role="tab" aria-selected="false" id="tab-btn-tos">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        <span>Terms of Service</span>
+      </button>
+    </div>
+
+    <nav class="nav-links">
+      <div id="landing-nav-links" class="sub-links" style="display:flex;align-items:center;gap:20px;">
+        <a class="link" href="#how" onclick="switchTab('home', false)">How it works</a>
+        <a class="link" href="#features" onclick="switchTab('home', false)">Features</a>
+        <a class="link" href="#faq" onclick="switchTab('home', false)">FAQ</a>
+      </div>
+      <a class="btn btn-primary btn-sm install-link" href="#" target="_blank" rel="noopener">Install</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div id="tab-home" class="tab-pane">
+    <!-- Hero -->
+  <div class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Google Sheets add-on</span>
+        <h1>Move your Excel macros to <span>Google Sheets</span></h1>
+        <p class="lead">Upload an .xlsm workbook or paste your VBA code. Macros Transfer converts it to Google Apps Script and gives you a clear report of what works and what needs your attention.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary install-link" href="#" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Install from Google Workspace Marketplace
+          </a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <p class="fine">Free plan available &nbsp;•&nbsp; Works inside Google Sheets &nbsp;•&nbsp; Files up to 25 MB</p>
+      </div>
+
+      <div class="mock-wrap" aria-hidden="true">
+        <div class="mock">
+          <div class="mock-bar">
+            <div class="mock-user"><div class="avatar">A</div>Your Name</div>
+            <span class="badge">Free Plan</span>
+          </div>
+          <div class="mock-tabs"><div class="on">Upload</div><div>Paste Code</div></div>
+          <div class="mock-drop">
+            <div class="mock-ico">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            </div>
+            <div style="font-weight:600;">Select Excel Workbooks</div>
+            <div style="color:var(--text-secondary);font-size:10px;">.xlsm, .xls, .xlsb (Batch upload)</div>
+          </div>
+          <div class="mock-chip">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <div><strong>Sales_Report.xlsm</strong><small>1.8 MB</small></div>
+          </div>
+          <div class="mock-btn">Convert Workbook</div>
+          <div class="mock-done">✓ Conversion complete</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <section id="how">
+    <div class="container">
+      <div class="sec-head">
+        <h2>Three steps, no copy-pasting</h2>
+        <p>From a macro-enabled Excel file to a working Google Sheet with converted code attached.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Add your macros</h3><p>Upload one or many Excel workbooks (.xlsm, .xls, .xlsb, .xltm), or paste VBA code straight into the sidebar.</p></div>
+        <div class="step"><div class="num">2</div><h3>AI converts the code</h3><p>Your VBA is translated into Google Apps Script, with Excel events like Workbook_Open and Worksheet_Change mapped to onOpen and onEdit.</p></div>
+        <div class="step"><div class="num">3</div><h3>Open your new Sheet</h3><p>Get a converted Google Sheet in your Drive with the code and a line-by-line compatibility report on the first tab.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="alt">
+    <div class="container">
+      <div class="sec-head">
+        <h2>Built for real-world migrations</h2>
+        <p>Everything you need to move off desktop Excel macros, in one sidebar.</p>
+      </div>
+      <div class="features">
+        <div class="feat"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></div><h3>Batch conversion</h3><p>Queue several workbooks at once and watch each one finish with its own link to open.</p></div>
+        <div class="feat"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line></svg></div><h3>Compatibility report</h3><p>A table lists each VBA line, its Apps Script status, and the manual action you still need to take.</p></div>
+        <div class="feat"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"></path><path d="M5 9h14l-1 11H6z"></path></svg></div><h3>Workbook + code together</h3><p>Your spreadsheet data is converted to a Google Sheet and the script is attached to it, ready to review.</p></div>
+        <div class="feat"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div><h3>Trigger-aware</h3><p>Event handlers are translated into Apps Script simple triggers so your automation starts working faster.</p></div>
+        <div class="feat"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div><h3>Paste-code mode</h3><p>No file? Paste a macro, get Apps Script and a report in a fresh spreadsheet.</p></div>
+        <div class="feat"><div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div><h3>Stays in your account</h3><p>Converted files are created in your own Google Drive. See our <a href="#privacy" onclick="switchTab('privacy', true); return false;">Privacy Policy</a> for details.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Before / After -->
+  <section>
+    <div class="container">
+      <div class="sec-head">
+        <h2>From VBA to Apps Script</h2>
+        <p>A simplified example of the kind of translation you can expect.</p>
+      </div>
+      <div class="compare">
+        <div class="code-card">
+          <div class="code-head vba">EXCEL VBA</div>
+<pre><span class="kw">Private Sub</span> Worksheet_Change(<span class="kw">ByVal</span> Target <span class="kw">As</span> Range)
+  <span class="kw">If</span> Target.Column = 2 <span class="kw">Then</span>
+    Target.Offset(0, 1).Value = Now
+  <span class="kw">End If</span>
+<span class="kw">End Sub</span></pre>
+        </div>
+        <div class="code-card">
+          <div class="code-head gas">GOOGLE APPS SCRIPT</div>
+<pre><span class="kw">function</span> onEdit(e) {
+  <span class="kw">const</span> r = e.range;
+  <span class="kw">if</span> (r.getColumn() === 2) {
+    r.offset(0, 1).setValue(<span class="kw">new</span> Date());
+  }
+}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Honest limits -->
+  <section class="alt">
+    <div class="container">
+      <div class="sec-head">
+        <h2>Know what to expect</h2>
+        <p>Not every VBA feature exists in the cloud. We tell you up front.</p>
+      </div>
+      <div class="limits">
+        <div class="box ok">
+          <h3>Usually converts well</h3>
+          <ul>
+            <li>Cell and range reads and writes</li>
+            <li>Loops, conditions, and custom functions</li>
+            <li>Sheet edit and open events</li>
+            <li>Formatting and basic data processing</li>
+          </ul>
+        </div>
+        <div class="box no">
+          <h3>Needs manual attention</h3>
+          <ul>
+            <li>Buttons lose their script assignments and must be reassigned</li>
+            <li>Windows APIs, COM objects, and ActiveX controls</li>
+            <li>Local file system and desktop app automation</li>
+            <li>Always review and test AI-generated code before use</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <div class="sec-head"><h2>Frequently asked questions</h2></div>
+      <div class="faq">
+        <details><summary>Which file types are supported?</summary><p>You can upload .xlsm, .xls, .xlsb, and .xltm files up to 25 MB each, or paste VBA code directly.</p></details>
+        <details><summary>Will my converted macros work perfectly?</summary><p>Often they work with little editing, but conversion is done by AI and some VBA features have no Google Apps Script equivalent. The compatibility report highlights what needs manual changes. Review and test the code before relying on it.</p></details>
+        <details><summary>Where do my files go?</summary><p>The converted spreadsheet is created in your own Google Drive. Your workbook is processed to extract macro code, and the VBA code is sent to an AI service for conversion. Read the <a href="#privacy" onclick="switchTab('privacy', true); return false;">Privacy Policy</a> for the full details.</p></details>
+        <details><summary>Why do I have to authorize the add-on?</summary><p>It needs permission to create the converted spreadsheet and script in your Drive and to show the sidebar in Google Sheets. It only accesses files it creates or that you open with it.</p></details>
+        <details><summary>My buttons stopped working. Why?</summary><p>Excel button assignments cannot carry over. In Google Sheets, right-click the button, choose Assign script, and enter the function name from the converted code.</p></details>
+        <details><summary>Is it free?</summary><p>A free plan is available. Plans and limits may change over time.</p></details>
+        <details><summary>How do I report a bug or give feedback?</summary><p>Use the "Feedback &amp; Bugs" link at the bottom of the sidebar, or the link in the footer of this page.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <div class="cta">
+    <div class="container">
+      <h2>Ready to leave desktop Excel behind?</h2>
+      <p>Install Macros Transfer and convert your first workbook in minutes.</p>
+      <a class="btn btn-white install-link" href="#" target="_blank" rel="noopener">Install from Google Workspace Marketplace</a>
+    </div>
+  </div>
+  </div>
+
+  <div id="tab-privacy" class="tab-pane" style="display:none;">
+    <div class="legal-page-wrap">
+      <div class="legal-toolbar">
+        <button class="btn btn-ghost btn-sm" onclick="switchTab('home', true)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back to Overview
+        </button>
+        <a href="privacy.html" class="btn btn-ghost btn-sm" target="_blank" rel="noopener">
+          Open Standalone Page ↗
+        </a>
+      </div>
+      <div class="legal-card">
+        <h1>Privacy Policy</h1>
+<div class="meta">Product: <strong>Macros Transfer</strong> (Google Sheets add-on) &nbsp;|&nbsp; Effective date: October 16, 2026 &nbsp;|&nbsp; Last updated: October 16, 2026</div>
+
+<div class="note">
+  Macros Transfer helps you convert Excel VBA macros into Google Apps Script. To do this, it processes your Google account details, the workbook files or macro code you submit, and files created in your Google Drive. This policy explains exactly what is collected, why, who it is shared with, and the choices you have.
+</div>
+
+<h2>1. Who We Are</h2>
+<p>Macros Transfer ("<strong>we</strong>", "<strong>us</strong>", "<strong>our</strong>", the "<strong>Service</strong>") is operated by <strong>Deepesh Verma</strong>, located in <strong>Madhya Pradesh, India</strong>. You can contact us at <a href="mailto:automatic.self.attendance@gmail.com">automatic.self.attendance@gmail.com</a>.</p>
+
+<h2>2. Information We Collect</h2>
+
+<h3>2.1 Account information (from your Google account)</h3>
+<table>
+  <tr><th>Data</th><th>Source / Purpose</th></tr>
+  <tr><td>Email address</td><td>Detected via your Google session. Used as your unique account identifier.</td></tr>
+  <tr><td>Display name</td><td>Retrieved from Google's userinfo endpoint. Shown in the sidebar.</td></tr>
+</table>
+<p>We do not store your profile picture or locale. If such fields exist on an older record, our system clears them.</p>
+
+<h3>2.2 Usage and account records</h3>
+<ul>
+  <li><strong>First installed</strong> and <strong>last active</strong> timestamps.</li>
+  <li><strong>Total conversions</strong> counter.</li>
+  <li><strong>Subscription tier</strong> (e.g., "free" or "pro").</li>
+  <li><strong>Payment customer ID</strong>, if and when paid plans are enabled. We do not store card numbers; payments, if offered, are handled by a third-party payment processor.</li>
+</ul>
+
+<h3>2.3 Content you submit</h3>
+<ul>
+  <li><strong>Excel workbooks</strong> (.xlsm, .xls, .xlsb, .xltm; up to 25 MB each) that you upload for conversion.</li>
+  <li><strong>VBA macro code</strong> that you paste or that is extracted from your workbook.</li>
+  <li><strong>Generated output:</strong> the Apps Script code and the compatibility report produced from your VBA.</li>
+</ul>
+<p>Your workbook may contain business or personal data in its cells. Our extraction server only reads the macro code, but the full file is also uploaded to your own Google Drive to create the converted spreadsheet (see Section 4).</p>
+
+<h3>2.4 Technical data</h3>
+<ul>
+  <li>Our extraction server may log technical error messages (for example, "VBA Extraction Failed") for debugging. These logs are not intended to contain your file contents.</li>
+  <li>Standard network information (such as IP address) is processed by our hosting providers and Google when requests are made.</li>
+  <li>The sidebar loads fonts from Google Fonts, which may receive your IP address and browser details.</li>
+</ul>
+
+<h2>3. Google Permissions We Request</h2>
+<table>
+  <tr><th>Permission (scope)</th><th>Why we need it</th></tr>
+  <tr><td>View your email address and basic profile (userinfo.email, userinfo.profile)</td><td>To identify your account and show your name.</td></tr>
+  <tr><td>View and manage Google Sheets (spreadsheets)</td><td>To create the converted spreadsheet and write the code and report into it.</td></tr>
+  <tr><td>Per-file Drive access (drive.file)</td><td>To upload your workbook and convert it into a Google Sheet. We only access files created or opened by the Service.</td></tr>
+  <tr><td>Connect to external services (script.external_request)</td><td>To call our extraction server and the AI conversion API.</td></tr>
+  <tr><td>Display UI inside Google Sheets (script.container.ui)</td><td>To show the menu and sidebar.</td></tr>
+  <tr><td>Create and manage Apps Script projects (script.projects)</td><td>To attach a script project containing the converted code to your new spreadsheet.</td></tr>
+</table>
+<p><strong>Google API Services User Data Policy.</strong> Our use and transfer to any other app of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements. We use Google user data only to provide and improve the user-facing features described in this policy. We do not sell it, use it for advertising, or allow humans to read it except with your consent, for security purposes, to comply with law, or where needed for support you request.</p>
+
+<h2>4. How Your Data Flows Through the Service</h2>
+<ol>
+  <li><strong>Sign-in check.</strong> When you open the sidebar, we read your Google email and name and create or update your record in our database.</li>
+  <li><strong>Extraction (uploads only).</strong> Your workbook is sent over HTTPS to our extraction server hosted on Render. It is processed in memory to extract VBA code and is not intentionally saved to disk or retained after the request completes.</li>
+  <li><strong>AI conversion.</strong> The VBA code (not your spreadsheet cell data) is sent to Google's Gemini API, which returns Apps Script code and a compatibility report.</li>
+  <li><strong>Drive and Sheets creation.</strong> Your original workbook is uploaded to <em>your</em> Google Drive using your authorization and converted to a Google Sheet. A new tab containing the converted code and report is added, and an Apps Script project is attached where permitted.</li>
+</ol>
+<p>The resulting spreadsheet and script are stored in <strong>your</strong> Google account. We do not keep a copy of them.</p>
+
+<h2>5. How We Use Information</h2>
+<ul>
+  <li>Provide, operate, and maintain the Service, including converting macros.</li>
+  <li>Identify your account and apply plan features.</li>
+  <li>Monitor usage, prevent abuse, and keep the Service secure.</li>
+  <li>Diagnose errors and improve conversion quality and reliability.</li>
+  <li>Communicate with you about support requests, important changes, or legal notices.</li>
+  <li>Comply with legal obligations.</li>
+</ul>
+<p>We do <strong>not</strong> sell your personal information or use your uploaded content to build advertising profiles.</p>
+
+<h2>6. Third-Party Service Providers</h2>
+<table>
+  <tr><th>Provider</th><th>Role</th><th>Data involved</th></tr>
+  <tr><td>Google (Workspace, Drive, Sheets, Apps Script)</td><td>Platform, authentication, file storage</td><td>Account info, workbooks, created spreadsheets and scripts</td></tr>
+  <tr><td>Google Gemini API</td><td>AI conversion of VBA to Apps Script</td><td>VBA code you submit</td></tr>
+  <tr><td>Google Firebase / Firestore</td><td>Database for account and usage records</td><td>Email, name, timestamps, conversion count, plan tier</td></tr>
+  <tr><td>Render</td><td>Hosting for the VBA extraction server</td><td>Workbook file in transit/memory, technical logs</td></tr>
+  <tr><td>Google Fonts</td><td>Font delivery in the sidebar</td><td>IP address, browser data</td></tr>
+  <tr><td>Payment processor (if paid plans are enabled)</td><td>Billing</td><td>Customer ID, billing details handled by the processor</td></tr>
+</table>
+<p>These providers process data under their own terms and privacy policies. How the Gemini API handles submitted content depends on Google's applicable terms for that API. Please avoid including secrets (passwords, API keys, personal data) in macro code you submit.</p>
+<p>We may also disclose information if required by law, to enforce our Terms, to protect rights, safety, or security, or in connection with a merger, acquisition, or sale of assets.</p>
+
+<h2>7. Data Retention</h2>
+<ul>
+  <li><strong>Account and usage records</strong> are kept while your account is active and until you ask us to delete them.</li>
+  <li><strong>Uploaded workbooks and VBA code</strong> are processed to fulfil your request and are not intentionally retained by us afterward.</li>
+  <li><strong>Technical logs</strong> are kept for a limited period according to our hosting provider's settings.</li>
+  <li><strong>Files in your Google account</strong> remain until you delete them yourself.</li>
+</ul>
+
+<h2>8. Data Security</h2>
+<p>We use reasonable measures to protect your data, including HTTPS encryption in transit, API-key authentication on our extraction server, file size limits, storing credentials in protected Script Properties, and limiting error details shown publicly. No method of transmission or storage is completely secure, and we cannot guarantee absolute security.</p>
+
+<h2>9. Your Rights and Choices</h2>
+<p>Depending on where you live (including under India's Digital Personal Data Protection Act, 2023, the EU/UK GDPR, or the CCPA/CPRA), you may have the right to:</p>
+<ul>
+  <li>Access the personal data we hold about you.</li>
+  <li>Correct inaccurate data.</li>
+  <li>Request deletion of your account and records.</li>
+  <li>Withdraw consent where processing is based on consent.</li>
+  <li>Object to or restrict certain processing, and request data portability.</li>
+  <li>Lodge a complaint with your local data protection authority.</li>
+</ul>
+<p>To exercise these rights, email <a href="mailto:automatic.self.attendance@gmail.com">automatic.self.attendance@gmail.com</a>. We may verify your identity before acting and will respond within a reasonable time required by applicable law.</p>
+<p><strong>Revoking access:</strong> You can remove the add-on's access at any time at <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">myaccount.google.com/permissions</a>. Revoking access stops further processing but does not by itself delete records we already hold; email us to request deletion.</p>
+
+<h2>10. International Transfers</h2>
+<p>Our providers may process data in countries other than your own, including the United States. By using the Service you understand that your information may be transferred to and processed in those locations, subject to appropriate safeguards where required by law.</p>
+
+<h2>11. Children's Privacy</h2>
+<p>The Service is not directed to children under 18, and we do not knowingly collect personal data from them. If you believe a child has provided data, contact us and we will delete it.</p>
+
+<h2>12. Cookies and Tracking</h2>
+<p>The sidebar does not use advertising cookies or third-party analytics trackers. Google may set its own cookies or identifiers as part of Google Workspace and Google Fonts.</p>
+
+<h2>13. Changes to This Policy</h2>
+<p>We may update this policy from time to time. The "Last updated" date above shows the latest revision. Material changes will be communicated through the Service or by other reasonable means, and continued use after changes take effect means you accept the updated policy.</p>
+
+<h2>14. Contact Us</h2>
+<p>
+  <strong>Deepesh Verma</strong><br>
+  Email: <a href="mailto:automatic.self.attendance@gmail.com">automatic.self.attendance@gmail.com</a><br>
+  Address: Madhya Pradesh, India<br>
+  Grievance Officer (India): Deepesh Verma (<a href="mailto:automatic.self.attendance@gmail.com">automatic.self.attendance@gmail.com</a>)
+</p>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="tab-tos" class="tab-pane" style="display:none;">
+    <div class="legal-page-wrap">
+      <div class="legal-toolbar">
+        <button class="btn btn-ghost btn-sm" onclick="switchTab('home', true)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back to Overview
+        </button>
+        <a href="tos.html" class="btn btn-ghost btn-sm" target="_blank" rel="noopener">
+          Open Standalone Page ↗
+        </a>
+      </div>
+      <div class="legal-card">
+        <h1>Terms of Service</h1>
+<div class="meta">Product: <strong>Macros Transfer</strong> (Google Sheets add-on) &nbsp;|&nbsp; Effective date: October 16, 2026 &nbsp;|&nbsp; Last updated: October 16, 2026</div>
+
+<div class="note">
+  <strong>Important:</strong> Macros Transfer uses artificial intelligence to translate code. Converted output may be wrong, incomplete, or unsafe. You must review and test all converted code before relying on it. See Sections 6 and 11.
+</div>
+
+<h2>1. Acceptance of Terms</h2>
+<p>These Terms of Service ("<strong>Terms</strong>") are a binding agreement between you and <strong>Deepesh Verma</strong> ("<strong>we</strong>", "<strong>us</strong>") governing your use of Macros Transfer (the "<strong>Service</strong>"). By installing, authorizing, or using the Service, you agree to these Terms and to our <a href="privacy.html">Privacy Policy</a>. If you do not agree, do not use the Service. If you use it on behalf of an organization, you confirm you have authority to bind that organization.</p>
+
+<h2>2. Description of the Service</h2>
+<p>The Service is a Google Sheets add-on that lets you upload Excel workbooks (.xlsm, .xls, .xlsb, .xltm) or paste VBA code, extracts the VBA macros, uses AI to convert them into Google Apps Script with a compatibility report, and creates a new Google Sheet in your Google Drive containing the converted code and, where possible, an attached Apps Script project.</p>
+
+<h2>3. Eligibility and Accounts</h2>
+<ul>
+  <li>You must be at least 18 years old and able to form a binding contract.</li>
+  <li>You need a valid Google account. Use of the Service is also subject to Google's own terms.</li>
+  <li>You are responsible for activity under your account and for keeping it secure.</li>
+  <li>When you first use the Service we create an account record linked to your Google email address.</li>
+</ul>
+
+<h2>4. Plans, Fees, and Changes</h2>
+<p>The Service may be offered on a free plan and on paid plans. We may change features, usage limits, pricing, or plan structure at any time. If paid plans are offered, billing terms will be presented at purchase, and unless stated otherwise fees are non-refundable except where required by law. We may add, modify, or discontinue any feature with or without notice.</p>
+
+<h2>5. Your Content and Licence to Us</h2>
+<ul>
+  <li><strong>Ownership.</strong> You keep all rights in the workbooks, VBA code, and other content you submit ("<strong>Your Content</strong>") and in the converted output created for you.</li>
+  <li><strong>Licence.</strong> You grant us a limited, non-exclusive, worldwide licence to process Your Content solely to operate and provide the Service to you, including transmitting it to our extraction server, to the AI provider, and to Google services.</li>
+  <li><strong>Your responsibility.</strong> You represent that you own or have the right to submit Your Content and that doing so does not violate any law, licence, confidentiality obligation, or third-party right (including software licences and employer or client agreements).</li>
+  <li><strong>Sensitive data.</strong> Do not submit passwords, API keys, personal data, regulated data (such as health or payment card data), or trade secrets in macro code or workbooks unless you accept the risk of processing by the third parties listed in the Privacy Policy.</li>
+</ul>
+
+<h2>6. AI-Generated Output; No Guarantee of Accuracy</h2>
+<ul>
+  <li>Conversion is performed by an AI model. Output may contain errors, omissions, insecure patterns, or code that behaves differently from the original or fails to run.</li>
+  <li>Many VBA features (for example, Windows APIs, COM objects, file system access, ActiveX controls, or certain UI elements) have no equivalent in Google Apps Script. The compatibility report is a best-effort guide, not a complete or guaranteed analysis.</li>
+  <li>Buttons and shapes from your Excel file may lose their assigned scripts and must be reassigned manually in Google Sheets.</li>
+  <li><strong>You are solely responsible</strong> for reviewing, testing, and validating all converted code in a safe environment, and for authorizing any script before it runs against your data. Do not run converted code on important or production data without independent review and backups.</li>
+  <li>Output is not guaranteed to be unique; similar output may be generated for other users.</li>
+</ul>
+
+<h2>7. Acceptable Use</h2>
+<p>You agree not to:</p>
+<ul>
+  <li>Use the Service for malware, ransomware, spyware, phishing, credential theft, or any malicious or unlawful code or purpose.</li>
+  <li>Submit content you do not have the right to use, or content that infringes intellectual property or privacy rights.</li>
+  <li>Attempt to bypass limits, authentication, or the API-key protection on our servers, or access the Service by automated means other than the provided interface.</li>
+  <li>Probe, scan, overload, disrupt, or attempt to gain unauthorized access to the Service, its infrastructure, or other users' data.</li>
+  <li>Reverse engineer or extract the Service's source code, prompts, or credentials, except as permitted by law.</li>
+  <li>Resell or provide the Service to third parties as a competing product without our written consent.</li>
+  <li>Upload files larger than 25 MB or otherwise abuse system resources.</li>
+  <li>Violate Google's terms, Apps Script quotas, or any applicable law.</li>
+</ul>
+<p>We may suspend or terminate access, limit usage, or remove content if we reasonably believe you have breached these Terms or that your use creates risk for us or others.</p>
+
+<h2>8. Third-Party Services</h2>
+<p>The Service depends on third parties, including Google (Workspace, Drive, Sheets, Apps Script, Firebase, and the Gemini API) and our hosting provider. We do not control them and are not responsible for their availability, changes, quotas, or policies. Google may restrict automated script creation or other functions; in that case you may need to copy converted code manually into Extensions &gt; Apps Script. Use of those services is subject to their own terms.</p>
+
+<h2>9. Intellectual Property</h2>
+<p>The Service, including its software, design, text, branding, and documentation (excluding Your Content and converted output), is owned by us or our licensors and protected by law. We grant you a limited, revocable, non-exclusive, non-transferable right to use the Service for its intended purpose while these Terms apply. No other rights are granted.</p>
+
+<h2>10. Privacy</h2>
+<p>Our collection and use of personal data is described in the <a href="privacy.html">Privacy Policy</a>, which forms part of these Terms.</p>
+
+<h2>11. Disclaimer of Warranties</h2>
+<p>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, ACCURACY, NON-INFRINGEMENT, AND UNINTERRUPTED OR ERROR-FREE OPERATION. WE DO NOT WARRANT THAT CONVERTED CODE WILL BE CORRECT, COMPLETE, SECURE, OR FUNCTION AS INTENDED, OR THAT THE SERVICE WILL BE AVAILABLE AT ALL TIMES. Our extraction server may be slow to respond or temporarily unavailable, for example after periods of inactivity or during maintenance.</p>
+
+<h2>12. Limitation of Liability</h2>
+<p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE AND OUR AFFILIATES, OWNERS, EMPLOYEES, AND LICENSORS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR LOSS OF PROFITS, REVENUE, DATA, GOODWILL, OR BUSINESS OPPORTUNITY, ARISING FROM OR RELATED TO YOUR USE OF (OR INABILITY TO USE) THE SERVICE OR ANY CONVERTED CODE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. OUR TOTAL AGGREGATE LIABILITY FOR ALL CLAIMS WILL NOT EXCEED THE GREATER OF (A) THE AMOUNT YOU PAID US IN THE 12 MONTHS BEFORE THE CLAIM OR (B) INR 1,000 (OR EQUIVALENT). Some jurisdictions do not allow certain limitations, so parts of this section may not apply to you.</p>
+
+<h2>13. Indemnification</h2>
+<p>You agree to defend, indemnify, and hold us harmless from claims, losses, liabilities, and expenses (including reasonable legal fees) arising from Your Content, your use of converted code, your breach of these Terms, or your violation of any law or third-party right.</p>
+
+<h2>14. Termination</h2>
+<p>You may stop using the Service at any time and revoke access at <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">myaccount.google.com/permissions</a>. We may suspend or terminate your access at any time, with or without notice, including for breach or for operational, legal, or security reasons. Sections that by their nature should survive (including 5, 6, 9, 11, 12, 13, and 16) will survive termination. Files already created in your Google Drive remain yours.</p>
+
+<h2>15. Changes to These Terms</h2>
+<p>We may modify these Terms at any time. The "Last updated" date shows the latest version. Material changes will be notified through the Service or by other reasonable means. Continued use after changes take effect constitutes acceptance. If you do not agree, stop using the Service.</p>
+
+<h2>16. Governing Law and Disputes</h2>
+<p>These Terms are governed by the laws of <strong>India</strong>, without regard to conflict-of-law rules. You and we agree to first try to resolve any dispute informally by contacting us. Unresolved disputes will be subject to the exclusive jurisdiction of the courts located in <strong>Madhya Pradesh, India</strong>, unless mandatory consumer laws in your country provide otherwise.</p>
+
+<h2>17. General</h2>
+<ul>
+  <li><strong>Entire agreement:</strong> These Terms and the Privacy Policy are the entire agreement between you and us about the Service.</li>
+  <li><strong>Severability:</strong> If any provision is unenforceable, the remainder stays in effect.</li>
+  <li><strong>No waiver:</strong> Failure to enforce a provision is not a waiver.</li>
+  <li><strong>Assignment:</strong> You may not assign these Terms without our consent; we may assign them in connection with a merger, acquisition, or sale of assets.</li>
+  <li><strong>Force majeure:</strong> We are not liable for failures caused by events beyond our reasonable control, including third-party outages.</li>
+  <li><strong>Feedback:</strong> If you send us feedback or bug reports, you grant us permission to use them without obligation to you.</li>
+</ul>
+
+<h2>18. Contact</h2>
+<p>
+  <strong>Deepesh Verma</strong><br>
+  Email: <a href="mailto:automatic.self.attendance@gmail.com">automatic.self.attendance@gmail.com</a><br>
+  Address: Madhya Pradesh, India
+</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="container foot">
+    <div>© <span id="yr"></span> Macros Transfer. Not affiliated with Microsoft or Google.</div>
+    <div>
+      <a href="#home" onclick="switchTab('home', true); return false;">Overview</a>
+      <a href="#privacy" onclick="switchTab('privacy', true); return false;">Privacy Policy</a>
+      <a href="#tos" onclick="switchTab('tos', true); return false;">Terms of Service</a>
+      <a href="https://forms.gle/BfhgdxgEGGc52R367" target="_blank" rel="noopener">Feedback &amp; Bugs</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // 👉 Replace with your Google Workspace Marketplace listing URL
+  var MARKETPLACE_URL = "https://workspace.google.com/marketplace/app/YOUR_APP_NAME/YOUR_APP_ID";
+
+  document.querySelectorAll('.install-link').forEach(function (el) { el.href = MARKETPLACE_URL; });
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Tab switching logic
+  function switchTab(tabId, updateHash) {
+    if (!['home', 'privacy', 'tos'].includes(tabId)) {
+      tabId = 'home';
+    }
+    
+    // Toggle tab panes
+    document.querySelectorAll('.tab-pane').forEach(function(pane) {
+      pane.style.display = 'none';
+    });
+    var activePane = document.getElementById('tab-' + tabId);
+    if (activePane) {
+      activePane.style.display = 'block';
+    }
+
+    // Toggle nav tab button classes
+    document.querySelectorAll('.nav-tab').forEach(function(tab) {
+      tab.classList.remove('active');
+      tab.setAttribute('aria-selected', 'false');
+    });
+    var activeTabBtn = document.getElementById('tab-btn-' + tabId);
+    if (activeTabBtn) {
+      activeTabBtn.classList.add('active');
+      activeTabBtn.setAttribute('aria-selected', 'true');
+    }
+
+    // Toggle sub links in nav
+    var landingNav = document.getElementById('landing-nav-links');
+    if (landingNav) {
+      landingNav.style.display = (tabId === 'home') ? 'flex' : 'none';
+    }
+
+    // Update history/hash
+    if (updateHash) {
+      if (tabId === 'home') {
+        history.pushState(null, '', window.location.pathname);
+      } else {
+        history.pushState(null, '', '#' + tabId);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function syncFromHash() {
+    var hash = (window.location.hash || '').toLowerCase();
+    if (hash === '#privacy' || hash === '#privacy-policy') {
+      switchTab('privacy', false);
+      window.scrollTo({ top: 0 });
+    } else if (hash === '#tos' || hash === '#terms' || hash === '#terms-of-service') {
+      switchTab('tos', false);
+      window.scrollTo({ top: 0 });
+    } else if (hash === '#how' || hash === '#features' || hash === '#faq') {
+      switchTab('home', false);
+      var target = document.querySelector(hash);
+      if (target) {
+        setTimeout(function() { target.scrollIntoView({ behavior: 'smooth' }); }, 50);
+      }
+    } else {
+      switchTab('home', false);
+    }
+  }
+
+  window.addEventListener('hashchange', syncFromHash);
+  window.addEventListener('DOMContentLoaded', syncFromHash);
+
+</script>
+</body>
+</html>
